@@ -1,0 +1,1550 @@
+
+function GM_getValue(a,b){return localStorage[a]||b}
+function GM_setValue(a,b){return localStorage[a]=b}
+
+
+var bRa,bBl,bCe,currubles,
+Aspell,Dspell1,
+poisonB,FinkaB,PistolB,
+NowBid,userCities,getData,GlobaldefBoss="",
+Bspell=new Array,
+user=GM_getValue("user"),auth_key=GM_getValue("auth_key"), access_token="1234567890abcdef",
+guid=0,userItems=[],nstBase=JSON.parse(GM_getValue("nstBase",null));nst=GM_getValue("am_vk_ch_nst",!0);
+var SBossBase=JSON.parse(GM_getValue("SBossBase",null)),
+sbb=GM_getValue("am_vk_ch_sbb",!0);
+var rejCombo=["Пацанское","Блатное","Авторитетное"],
+bossNames=['* Кирпич','* Сизый','* Махно','* Лютый','Шайба','Палыч','Циклоп','Бес','Паленый','Борзов','Хирург','Раиса','Близнецы','Бурят','Дюбель','Дядя&nbsp;Миша','Жестянщики','Отбой','Бугор','Боцман','Жульбаны','Цербер','Пресс','Гастролер','Ташкент','Конвой','Бандяк','Бульдозер','Контрабас','Воркута','Крест','Север','Шнифер','Гризли','Бивень','Кусто','Феня','Крюгер','Карло','Мазай','Фин','Мезен','Ёхан','Чебот','Абу','Дантист','Бельмондо','Немой','Чугун','Змей','Шмель','Старшой','Бидон','Шизо','Кнут','Зубр','Мельдоний','Борисыч','Полтос','Атас','Думский','Боров','Славянин','Тротил','Сыч','Лукум','Ява','Торгаш','Гром','Беня','Кощей','Ламбер','Кирпич','Сизый','Лютый','Эмигрант','Махно'],
+bosshealth=["",1e3,1e4,5e4,1e5,5e5,1e5,3e5,7e5,15e5,3e6,3e7,3e5,2e6,2e6,4e7,3e6,5e4,15e4,1e9,5e5,1e6,5e6,7e7,15e4,3e6,1e7,5e6,15e6,3e6,1e7,5e9,2e7,2e6,1e7,2e6,2e7,15e6,35e5,4e7,25e6,3e7,1e6,7e6,3e6,8e6,5e7,5e6,1e8,4e8,13e9,8e6,4e8,3e8,5e7,5e8,1e8,5e8,75e7,9e8,1e8,5e8,9e8,,2e11,85e7,3e8,16e8],
+bosshealthm={2:[3e4,6e4],3:[15e4,3e5],4:[3e5,6e5],5:[15e5,3e6],10:[9e6,18e6],11:[9e7,18e7],14:[6e6,12e6],15:[12e7,24e7],16:[9e6,18e6],20:[15e5,3e6],21:[3e6,6e6],22:[15e6,3e7],23:[21e7,42e7],26:[3e7,6e7],27:[15e6,3e7],28:[45e6,9e7],29:[9e6,18e6],30:[3e7,6e7],32:[6e7,12e7],33:[6e6,12e6],34:[3e7,6e7],35:[6e6,12e6],36:[6e7,12e7],37:[45e6,9e7],38:[105e5,21e6],39:[12e7,24e7],40:[75e6,15e6],41:[9e7,18e7],42:[3e6,6e6],43:[21e6,42e6],44:[9e6,18e6],45:[24e6,48e6],46:[15e7,3e8],47:[15e6,3e7],48:[3e8,6e8],49:[12e8,24e8],50:[39e9,78e9],51:[24e6,48e6],52:[12e8,24e8],53:[9e8,18e8],54:[15e7,3e8],55:[15e8,3e9],56:[3e8,6e8],57:[15e8,3e9],58:[225e7,45e8],59:[27e8,54e8],60:[3e8,6e8],61:[15e8,3e9],62:[27e8,54e8],64:[6e11,12e11],65:[255e7,51e8],66:[9e8,18e8],67:[48e8,96e8]},
+gLvlExp=[0,1150,3200,6650,11800,19e3,28450,40500,55350,73350,94600,119650,167800,223600,287800,414800,754400,1146e3,1595e3,2283e3,3063e3,4699e3,655e4,8638e3,10977e3,12862e3,14949e3,16131e3,17421800,18826e3,2035e4,22e6,23785e3,25706e3,27777e3,3e7,3235e4,349e5,376e5,405e5,435e5,466e5,5e7,535e5,572e5,61e6,652e5,697e5,743e5,795e5,851e5,91e6,974e5,104e6,112e6,11984e4,1282e5,1372e5,1468e5,157e6,168e6,180e6,192e6,206e6,22e7,235e6,252e6,27e7,288e6,308e6,1e12],
+dName=["","Тройка","Копейка","Красная однёрка","Атлянка","Белый медведь","Полярная сова","Чёрный беркут","Тулун","Володарка","Льговка","АВ 262/5",'Мордовка'],
+srv_ip=["188.93.20.139","109.234.155.196","109.234.155.198","109.234.156.250","109.234.156.251","109.234.156.252","109.234.156.253","109.234.157.37","109.234.157.38","109.234.157.94"],
+moscowInfos = [], fightersMass = [],
+des_sw=["Старый","Новый"],des_swM=["Старый","Новый"],des_swK=["Старый","Новый"],
+des_sel=GM_getValue("des_sw",1),des_selM=GM_getValue("des_swM",1),des_selK=GM_getValue("des_swK",1),
+ach_stls=["000000","009600","009600","009600","000096","000096","E69600","E69600","E69600","E69600","FF1111","FF1111","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000"], ach_stls2 =['000000','009600','009600','009600','009600','000096','009600','000096','000096','E69600','E69600','FF0000','000096','E69600','E69600','FF0000','E69600','009600','009600','FF0000','000096','000096','E69600','FF0000','009600','E69600','FF1111','E69600','FF1111','E69600','FF1111','FF1111','FF0000','E69600','FF0000','E69600','FF0000','FF0000','E69600','FF0000','FF0000','FF0000','009600','E69600','E69600','E69600','FF0000','E69600','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000','FF0000'], ach_stls3=["000000","009600","009600","E69600","E69600","FF1111","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000"],ach_stls4=["000000","000000","000000","000000","000000","000096","000096","000096","E69600","E69600","E69600","FF1111","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000","FF0000"],
+ctitles=["Рубли","Туалетка","Мыло","Папиросы","Сахар","Сгущенка","Новые посылки","Зарубов сегодня","Энергия"];
+
+var curimg = ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAC1UlEQVQ4T7WTyU8TURzH0asHl5m2tlC6pEhBaaEthRbqIKVEEw4khoMSxCUxRD0QAWlYylLRIGvZobSytCyytYWWUtBIMFGiuBCjxCXGfwAPGq9f35QY9CInJ/nOTCbv83m/9+b39gGI+O+XjneAmyk5YsqS0ndMErojS0hp/jmpQXBYmCmicrOlnFaSZ3kqMcry1Ogt1cNenoprOUnIltJL7Jiw6GQkHWOUUPkmCWfAJKU3z+tkqMrXwFnJYKHVgKcDKXjhVOH1iBabYynYmtZhpc8YlkSYpJyGwgw5rFf0cNVlIGhLx8tRPd64UrE5ocP7mTR89pJ4CDiZiA27DA+bI/GgkgJhf7KC7ecOFT569NiaS8PWbDq++NPxNZCCT1Mn8MohxaNWATy1XLjMHAyVceAoodBfTLOC7Qiyxm+T1mQsdyTjg5fB9vpFrNkE8Fk5GDfTGL5FAAINEdh7Nyr8DLaIMFLB2xGwN1eNFiPVGjzu0yHYyIczDPAwUcPHSrsY6/YYzDVEwn9PiAUSf4sE3rbYXcGgWYnum3EI2JLwbi4Hi81iLLWKsNgUjdUuKabr+Zi2CoggGgHybc0uh687cVcwbNEQgRzzbQpsuBk4zUcxQ4BhMxejFVwskyrY0lnpVB0f8+2sQLUrGLKo0VMSj0BHEp4MquGuEWK1RxqG2NLd1bzw++/4bHHwdiawv/EH2UT6e3+5Ap3Fx+BvT0SArG+sdmfGPzNeH42FrniEBpUIOdRovKEE6cqmCNI8b9tKk4kgFisDaizaZHDXCYmED197LIJ9CoScWsx2M7CTPrFc0uGCQQ7S1l2M6KCYFVzPVYhgLTIg1KeFp1EEp0WA8SYlHLcZ1F9NRyETh9MyHrIk9P0sMVXARHFkf50FRkTJSTm95nNaVBUcR9EZBXIThOwmuYwS+vIpMRVLgP17nlqjhHPWJKarjSIqg5R3aE+ADPgFYKGciRmI85MAAAAASUVORK5CYII='
+			, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACkklEQVQ4T62TXUzSYRjFsbV121bpTUYfgrkoZyzNC+bQDdTIabO5uSCGWltquVx+YJIlQaaT9TFLN1dDAxHMkVYaiohtiEPELkRWM7gQDSbit1O3E/w32bqmdzs7N+/72/OcdycCACmsEwSEI1IeOSqCF3vyTHkqo06Uc8UhyuH4hVnpvqqr7JCqs9L/CLMzdaWMJH7g7pF/JubGRB+uSk97o215BbfzN5a8HricTvyYnobVaiU0OTmJ7yN6tNfX4V5K8kseNToyBCm+nMCUP65dXFpcxM7ODnZ3d7G1tYX5+XnYbLYQwGKxYMJsxltRzRo/7vSDACCCgFSyU6XGj2psb2/D5XJhdnYW6+vrBMRut2N8fBzmwMOgm0wmfNGoUZGR1sOlHD9KAGo47KFftil4PB40NDRALBZjYGCAmGZhYQFGoxFjY2MhDfb3QVLIt/CoZDoBEHJY335OWTE3N4fGxkZIJBJ0dHRgZWUFXq8XBoOBgOxraHAQzWUlS/yzp67vryAz9Wvh9/vR2dkJqVQKjUaDjY0NuN1u6HQ6jI6OhjQyPIzXwkoIzlGKWVFRB0ilyfSsrueSzbXVVSwvL8PhcMDn82Fvbw/B4LRaLfR6PQEKend3N941N6EsjaEriI+lkAK7RNbnXVOav37GZiC84C8E9w9C5HI52tvaoFAooFQqCZhKpcKngLc8eYQSRqKMxKWQDxbQqBlP83PtBnUXnPYZzFgmoGptwUMBHyJePj60taKvtxfvX8jQdPcOZOVlEBfcdN++FN9E5HCDSj4kiItJqGAzn9VmZ05Uc1iGYkZSayGdVlR0kca5z2IqytlMZ2lKsrrwQlzGLTotV3CemsilnDgWVg+IIoZTpP8C+Aurp3EZS8LzHQAAAABJRU5ErkJggg=='
+			, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAC2UlEQVQ4T3WTe0jTURTHlxRBRLrNtN8qzDDCiqBECCKUCt20RMNHhVTkHwllaZKpMxXnEjNFUzSbmambK5W0aVmWbmhYzhfzjaVZqT3Aylc+kG/n9xPdyrpw+P2453w/55x771nB+89ytea7m5mZeQMwzGNGWf1l8uvfoeT7c8uOx1tNQl+JSFB76eAeFCfHIi04EH72thAzgpsu69dRiHEtAQ5ZmW+VMIIkDxtrhHs4Q6vKxuzkPOamgblfwEjfAPLjI3F6rz0I3iQR8UMdeLw1HMCVsTjgv9sO+bJI9Le2YHaKRCScnQRmJhaM/WdB49/GYNDWIjXoLFtRFgcgokotD8Ho+x5Mj81xANYWxaYAdn9qdAKfu17DfaMl6QngJhIo88JPobMyE301+Rg21GJseITLugQbn8f3jwMYbNSgt/ouOjRppgChIjvYl9tkrbMyAz3PczDUVoOfQ8P48WmQhJXorspGZ0U6Z+3lKUaAWCRMv3XuKAVVwFCWvBDEQp4pMNBQhv76EnQ9yeSMTcCK20oTjQD29JPOHEbLw3hyJHABH5qr0PU0C/11JXine0DQDBKnYlBfwcU0q+NMKmCEcQknnaFXSskRg7aSeKokCR0keqtV07ko0a5JgeFRIlqLZdCroiHzczbegniDQConQMO9UOgLI9D/qpQgC5X0viigQ8sl4A1O3KSKgu5OCNID3UyukRGGxRzbhzrFBQ7SWBCO5qJYrs/uKgX1nrUkfnP/ChpyQ6C7HWhswYXP3+yzjYHcxxGaRH8uQF8oRQu10/44FQaqpLkoGn06NepzgqCWeiHMZZexAvZlUxs72Nvw3GJNzp0ok5+gSiLQWnKdDldG0MvIC/VAgIMtjmyyhCsjuEhPedWyYXIyN7cQM8KrnjZWiPVyRHliAFRRx3F+/3a4MYKXlMib8q1cHKdlgEWHE7PWkp74NYlI2EFfLQ2P37+mngX8BkK+QG4znXeiAAAAAElFTkSuQmCC'
+			, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAAxUlEQVQ4T2P8//8/A0UAZAAlmCLNYNcT6wVHQUErZ0HBxT6Skv+dBAXLYK4mygBHPj43dxGR//vXrv1/cMOG/0CD7hNtgCM/f5CXuPj/Qxs3gjW7CgkR7wJnAYFoLwmJ/2f37YNrBopNB8UaQRc48fOn+EhJ/b98/DhQ7X+wzTDNBA0AKswNkJf/f+vCBayaMQwAmQyyAYZDVFX/P7xxA6dmDANAGpHB8wcP8Gom6AJQNKH7GT25EwxEQvkDxYCBzwuUuAAA3qm4JT5a7yYAAAAASUVORK5CYII='];
+
+var cimg = [
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADRElEQVR4nG1TTWwbVRic93a9G8e7Xsc/G9IkTmnSgCPaIJAoUEpDaJu0Em3VqkI9cAVucODGuXeEBELAhRM/FRTOiCoWVIqCVBGlUSpj56e2aztOvLG9Xu96973HgVoqP3P6NN/MZUZD8C+8Fo1OEkLmKKVTHIhSgHEhaiDkrmNZS8tA93E96R/HgUgiFrsS6KHr6kRi+nDmSCppJlTfD3ixULIrG1sPlJrzJwvYl0vN5i99n9w3Jw3jWm9Mf2/hrQuz586eImZqFPuNMhLxNFrtarhUrqW++uLmZPXOujYPQ7/dbP4IABIAPBOLXe+Oa++/++E7z549c5LsFItoNHdhd2zkCjlUqrswDB0XL50ZuL+3m94rlLUjsprf9ryK9KquH2XR0Afn3756an7+BO5t3IcWCcPvBYgaBgaUMCrVGlptG67nYXHhtJy9u2qIWnt4q+v+RGVZnlcOm5nLFxeQy2/CNOOIGQbSY2N45YWruLeeQ73eQDwehee5cD0Xb7x5YcTXQqnTmjZNqRBPHT02NRwKKZBlCtvuQgiCYzPnsLnzK4IggCzLkCiFaQ6hXKkik5kEjQ8eopI0IwtASwwnVcd1oKoKWu0OVtc2sN84wMzTU+Ccg1IC1/MhBIHf8xEOq1CNSKRHmwkKgAe+zxnzsN9ownU9EAJwzpAefQniUV2UPGqcEHAhwH3GCOc+BSF7xULZVhUFbduB5/kghIBSCcWHy5AlCZwLqKoCxhm0SARWo4Vuo20RoES5ECsP1vM7uzUL46MjCAIGAUCSJIwfehG27UAIgdiQBsdxMZEeRTa7wmTLLXmMrUqDrluOMvlkvrP35OVLi4rd6aDj/J3H97duolKtY/b4NHRtEMOmie3tCr755Ou1kOV9nm21VqQ60JtUVXe/vGtutw4mzi/OSclEDKoqY2Qkieeez2B87Akk4wkU8mV8fOPTndDmwe+uZX1UBHoSAGy5bm6KKF61UNbvrK4Zg7qmJBMJNqTrTILESsU6u/XDz/63n323IReslaDn3/it13v4jzEBwJyun6CS9DoP0VlJG9BDlGj9X9Bw/mCcL3HgdrbZPPjPGh/Hy4CuRqMmFyLV57Lt9vL/af8Cy0h5fuyvibAAAAAASUVORK5CYII=',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACkklEQVQ4T62TXUzSYRjFsbV121bpTUYfgrkoZyzNC+bQDdTIabO5uSCGWltquVx+YJIlQaaT9TFLN1dDAxHMkVYaiohtiEPELkRWM7gQDSbit1O3E/w32bqmdzs7N+/72/OcdycCACmsEwSEI1IeOSqCF3vyTHkqo06Uc8UhyuH4hVnpvqqr7JCqs9L/CLMzdaWMJH7g7pF/JubGRB+uSk97o215BbfzN5a8HricTvyYnobVaiU0OTmJ7yN6tNfX4V5K8kseNToyBCm+nMCUP65dXFpcxM7ODnZ3d7G1tYX5+XnYbLYQwGKxYMJsxltRzRo/7vSDACCCgFSyU6XGj2psb2/D5XJhdnYW6+vrBMRut2N8fBzmwMOgm0wmfNGoUZGR1sOlHD9KAGo47KFftil4PB40NDRALBZjYGCAmGZhYQFGoxFjY2MhDfb3QVLIt/CoZDoBEHJY335OWTE3N4fGxkZIJBJ0dHRgZWUFXq8XBoOBgOxraHAQzWUlS/yzp67vryAz9Wvh9/vR2dkJqVQKjUaDjY0NuN1u6HQ6jI6OhjQyPIzXwkoIzlGKWVFRB0ilyfSsrueSzbXVVSwvL8PhcMDn82Fvbw/B4LRaLfR6PQEKend3N941N6EsjaEriI+lkAK7RNbnXVOav37GZiC84C8E9w9C5HI52tvaoFAooFQqCZhKpcKngLc8eYQSRqKMxKWQDxbQqBlP83PtBnUXnPYZzFgmoGptwUMBHyJePj60taKvtxfvX8jQdPcOZOVlEBfcdN++FN9E5HCDSj4kiItJqGAzn9VmZ05Uc1iGYkZSayGdVlR0kca5z2IqytlMZ2lKsrrwQlzGLTotV3CemsilnDgWVg+IIoZTpP8C+Aurp3EZS8LzHQAAAABJRU5ErkJggg==',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAC1UlEQVQ4T7WTyU8TURzH0asHl5m2tlC6pEhBaaEthRbqIKVEEw4khoMSxCUxRD0QAWlYylLRIGvZobSytCyytYWWUtBIMFGiuBCjxCXGfwAPGq9f35QY9CInJ/nOTCbv83m/9+b39gGI+O+XjneAmyk5YsqS0ndMErojS0hp/jmpQXBYmCmicrOlnFaSZ3kqMcry1Ogt1cNenoprOUnIltJL7Jiw6GQkHWOUUPkmCWfAJKU3z+tkqMrXwFnJYKHVgKcDKXjhVOH1iBabYynYmtZhpc8YlkSYpJyGwgw5rFf0cNVlIGhLx8tRPd64UrE5ocP7mTR89pJ4CDiZiA27DA+bI/GgkgJhf7KC7ecOFT569NiaS8PWbDq++NPxNZCCT1Mn8MohxaNWATy1XLjMHAyVceAoodBfTLOC7Qiyxm+T1mQsdyTjg5fB9vpFrNkE8Fk5GDfTGL5FAAINEdh7Nyr8DLaIMFLB2xGwN1eNFiPVGjzu0yHYyIczDPAwUcPHSrsY6/YYzDVEwn9PiAUSf4sE3rbYXcGgWYnum3EI2JLwbi4Hi81iLLWKsNgUjdUuKabr+Zi2CoggGgHybc0uh687cVcwbNEQgRzzbQpsuBk4zUcxQ4BhMxejFVwskyrY0lnpVB0f8+2sQLUrGLKo0VMSj0BHEp4MquGuEWK1RxqG2NLd1bzw++/4bHHwdiawv/EH2UT6e3+5Ap3Fx+BvT0SArG+sdmfGPzNeH42FrniEBpUIOdRovKEE6cqmCNI8b9tKk4kgFisDaizaZHDXCYmED197LIJ9CoScWsx2M7CTPrFc0uGCQQ7S1l2M6KCYFVzPVYhgLTIg1KeFp1EEp0WA8SYlHLcZ1F9NRyETh9MyHrIk9P0sMVXARHFkf50FRkTJSTm95nNaVBUcR9EZBXIThOwmuYwS+vIpMRVLgP17nlqjhHPWJKarjSIqg5R3aE+ADPgFYKGciRmI85MAAAAASUVORK5CYII=',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAAxUlEQVQ4T2P8//8/A0UAZAAlmCLNYNcT6wVHQUErZ0HBxT6Skv+dBAXLYK4mygBHPj43dxGR//vXrv1/cMOG/0CD7hNtgCM/f5CXuPj/Qxs3gjW7CgkR7wJnAYFoLwmJ/2f37YNrBopNB8UaQRc48fOn+EhJ/b98/DhQ7X+wzTDNBA0AKswNkJf/f+vCBayaMQwAmQyyAYZDVFX/P7xxA6dmDANAGpHB8wcP8Gom6AJQNKH7GT25EwxEQvkDxYCBzwuUuAAA3qm4JT5a7yYAAAAASUVORK5CYII=', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAC2UlEQVQ4T3WTe0jTURTHlxRBRLrNtN8qzDDCiqBECCKUCt20RMNHhVTkHwllaZKpMxXnEjNFUzSbmambK5W0aVmWbmhYzhfzjaVZqT3Aylc+kG/n9xPdyrpw+P2453w/55x771nB+89ytea7m5mZeQMwzGNGWf1l8uvfoeT7c8uOx1tNQl+JSFB76eAeFCfHIi04EH72thAzgpsu69dRiHEtAQ5ZmW+VMIIkDxtrhHs4Q6vKxuzkPOamgblfwEjfAPLjI3F6rz0I3iQR8UMdeLw1HMCVsTjgv9sO+bJI9Le2YHaKRCScnQRmJhaM/WdB49/GYNDWIjXoLFtRFgcgokotD8Ho+x5Mj81xANYWxaYAdn9qdAKfu17DfaMl6QngJhIo88JPobMyE301+Rg21GJseITLugQbn8f3jwMYbNSgt/ouOjRppgChIjvYl9tkrbMyAz3PczDUVoOfQ8P48WmQhJXorspGZ0U6Z+3lKUaAWCRMv3XuKAVVwFCWvBDEQp4pMNBQhv76EnQ9yeSMTcCK20oTjQD29JPOHEbLw3hyJHABH5qr0PU0C/11JXine0DQDBKnYlBfwcU0q+NMKmCEcQknnaFXSskRg7aSeKokCR0keqtV07ko0a5JgeFRIlqLZdCroiHzczbegniDQConQMO9UOgLI9D/qpQgC5X0viigQ8sl4A1O3KSKgu5OCNID3UyukRGGxRzbhzrFBQ7SWBCO5qJYrs/uKgX1nrUkfnP/ChpyQ6C7HWhswYXP3+yzjYHcxxGaRH8uQF8oRQu10/44FQaqpLkoGn06NepzgqCWeiHMZZexAvZlUxs72Nvw3GJNzp0ok5+gSiLQWnKdDldG0MvIC/VAgIMtjmyyhCsjuEhPedWyYXIyN7cQM8KrnjZWiPVyRHliAFRRx3F+/3a4MYKXlMib8q1cHKdlgEWHE7PWkp74NYlI2EFfLQ2P37+mngX8BkK+QG4znXeiAAAAAElFTkSuQmCC',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACj0lEQVQ4T32TbUiTURTHt5TePhTJpiSbObJETHSpWOlCDZw0t2lpRlIk0yxNqg9rTAjJsA86sfmSSYVzRkVJLVzNzBxkEb7M1xrN3ufEyXJN2cxt1r/nGUhFcwcO957LPb/759xzqAAopFGpVM8aRqGsYQVR/OfcAX7r/BbXk2d2/4V53TTFSWzJy7+WczwJZEA6N2hTJI9JayjmJuBkSjxEiWwU79uF0vQkFHLYKODEQBAaRAJWLed4QMtBTkJsh0HXTYTkA/+azWbDyMgQWpurkMGgXfYKyGZHIk8zifJuPW71vYN6eALaNx/QOf4RrS/GIGlTQ1DRBB6D/t0rgB8SiNK3PyHVL0JmdqPasoSSz04UjtpxoteM0yodzja3Ewro1hUBNdcImTNLePUD//nR+wM4VXnDN+BIZT8EY4sQG12QmtyQfHEhd8gBYdcU9tx8Cbb4um9AnmoaSf0LODbhxBlCvmzSheMjC+B3GhHTqMUWaYtvQGqaEqHP55A47gSHUBLX50Dw03msVnwCRaZFSEa5b4C4fhjR53qQ/NiM1GcWJI85EaWaQUBZNzYKa7Ezusg3YJIob6GkC4cP3kF+/kPUKkaRn6VEwoYShFGzIZbWgsekz3r9hQwmzT7nsENvc0FQpEYOtwWZnGakR1Qjam0B0jIv4W6rggQYVwDQTRazydOCHQYbUrgK8GPlSA6uQHzcRSgfqKFsrCMB/Sv2wZWvf1q4rXcKe7dVIX13Ax719EGj0eBqfR1Zg0GvAB6D1lR2XgL5oBG331vxxGgFv34AonYDxKrXyJXfA//AIexn0EReAeRkEpALwnCWKSsqwpq1Y/usMHzrLJ+1+RuPGWgjpFuIOaj5e4JJ0G9zZYjltOGOMAAAAABJRU5ErkJggg==',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAABUUlEQVQ4T6WTT0sCURTF34yKiij4PxRcihu3CroV/RR9tjZFm/ketWxRuyCZqIGJkjaVIJzOcZqh8A2B8+DC4717f/e+c+9zAJhMS4AslgT/qsI9N+aU5l0YE8i01xl93NgvTvoHcGbMyaUxuKlWEXS7eO33ETabWBeLuHZd6E4+gtgArhzW7TYwmWA7ndInWpt6HSDkznH2EFVyAFCJyqxgLBbYLZcJIOh0gHIZyOVwRYB8bQDvhWVDmRm8W62sAD8CeAcAibXt9YDxGJjN8DmfJ4Bn6oBSCaAOH3yGfK2Ar0YDGAyA4RCb0SgBPNZqQKEQAViBFaCynigUJFirhXe+W5kV/KZzvh/MnvoECaNWSW0J5lcqSQUP+fw+mPKni6jWqEVqlbKFCvpZocC8u6WltlHDEQ+SWnVP8xnoE6i9zv4bpHhKjxvlYz9Upp+opN9GiyEKsVp7WwAAAABJRU5ErkJggg==',
+
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACQ0lEQVQ4T2P8//8/A0UAZAAlmCLNGK4HCjDmhngkbOiM/FDqITzJX5qBLYGBgbXORqVraqzq5wxbgfT/rgxMWL1sL8HInxZl2nb3+r5f/z7t+39hbczvRBeZnEwbxdQT/b6/Hm6L+H9lq8/vaieuviB5BgG4IUGinOolrmZlq7uSbr663vP/0+sl///9uPz/0LKK/yG2ojlRNnzJm/rt/v98VvP/1QGD/7sqJP9Pj1O82+EnU5Emw6DJMDHHYeurI/n/X2/3/f/9RPT/tzfK/+9cnv3//pmF/2dUxp6e15589MzulP+repX/X1io//9CmcL/4xkC/89N0vu/MM92D0OGLZ/z+bXOXx+vVf3/eoPN/4lJ2gdbMj0OP7u+/v/C2uj/Xx6u///yUsn/tljl450+onseTFT7f7lN6P/J+fbfU234vRhAqSDJQjD1whKn72fnmP+PkGDwseRnkKvLtv/48fWW/2+uTv/fk+r4yUqYSzlYlsH14lKn/+dXuv3McpbIAaYARnBY/PdnYExw4Q4oitc4mqXEJLOiMWDrp4vF/2/tz/3bX2n399HJrv99xRF7goQ4pUvSzI/GeEiFrGXAERutyRrVj3eG/Ts0zeJ3sZd4W66/ZsOtwy2/X12d8q/AX6sJb6p1UBIw2rko7veJ2dr/+xPkTvSIM7D3izOwTsg2PvjjRuX/U+vLf7tI8FngNMRRmoG9Pkl3wYGZwb+qAgyXwRQWuYou3DvB/ndHpPbSMFZuDhQDKMkH4KQ84AYAAFNr8iQD1anPAAAAAElFTkSuQmCC',
+
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACV0lEQVQ4T42TXUgTUBTHV7bJMNAmy6azsbJ9mYP1gdOpIzXbhCEuZ1qx0tUMCZmL6mGRGBqDqKjYw/zaStJiUW49JLqUXBHa1ot9PAwpG+RoUmjNhUH/7ohgPWzzwnk4nP/5ncv/3EsBQPkXlJjjm5zMq+FwVt9OT+PJ4CDK0tK+u4eHS6OS/3riAc7Vamw3jS2kDIwN2bGX9Ollsp41AdxOp/jgNs6vb0EPIsvvcFQsQhGVBlt3t25NAINS9dDWoSWzZ3H/qgG7yHQFkxX0PvOykgImHjhlh/hshEMD+PrJBmXWZtTkZkNfXAB9iWzG43JtTeiBvqTiqeOKimh6cc9cj1uGaoQ+WEjuxCmZCI0i8au4gMcDd6u1YhZ+fmkHli8g8tlEtDeA3xYs+s1Qc9koSaWH4wKai0qfj/dKSZ24v9qKgO84CT3Ju2C/qICEsg4GhWIsLkDDF8xN3ZHA/3I/zE070ShgIThbj/DCCTTws1FMS4Wrv18ZFzDS13ekMiN95Zg4E1WMdFzX84i2DiPXCskmaGgplc9oNJqUuAC5XL6hbjs3MDfBRfC1EAu+AuKDFO0VOShMocFiMhkTrjFKPynbN+W5vQVYEQKLQkT8fCx9zIftPBuqXN78i9FRQcI1Xmo+ffby4Qzgx18AwkIEvDtwpioLu4mJXTpdW0KA0z6U38DPxNL7PITe8GBpy4GSycAe4oGKnbM07nBIkn2m9R3aJnttLhVqzibSSEcZfSNay8udj6zWgqRPOSqwWq1Uo0ptqWQw53VSqbuns/NA7FePvcEfJ8NGXrEgoIkAAAAASUVORK5CYII=',
+'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAACQ0lEQVQ4T2P8//8/A0UAZAAlmCLNGK4HCjDmhngkbOiM/FDqITzJX5qBLYGBgbXORqVraqzq5wxbgfT/rgxMWL1sL8HInxZl2nb3+r5f/z7t+39hbczvRBeZnEwbxdQT/b6/Hm6L+H9lq8/vaieuviB5BgG4IUGinOolrmZlq7uSbr663vP/0+sl///9uPz/0LKK/yG2ojlRNnzJm/rt/v98VvP/1QGD/7sqJP9Pj1O82+EnU5Emw6DJMDHHYeurI/n/X2/3/f/9RPT/tzfK/+9cnv3//pmF/2dUxp6e15589MzulP+repX/X1io//9CmcL/4xkC/89N0vu/MM92D0OGLZ/z+bXOXx+vVf3/eoPN/4lJ2gdbMj0OP7u+/v/C2uj/Xx6u///yUsn/tljl450+onseTFT7f7lN6P/J+fbfU234vRhAqSDJQjD1whKn72fnmP+PkGDwseRnkKvLtv/48fWW/2+uTv/fk+r4yUqYSzlYlsH14lKn/+dXuv3McpbIAaYARnBY/PdnYExw4Q4oitc4mqXEJLOiMWDrp4vF/2/tz/3bX2n399HJrv99xRF7goQ4pUvSzI/GeEiFrGXAERutyRrVj3eG/Ts0zeJ3sZd4W66/ZsOtwy2/X12d8q/AX6sJb6p1UBIw2rko7veJ2dr/+xPkTvSIM7D3izOwTsg2PvjjRuX/U+vLf7tI8FngNMRRmoG9Pkl3wYGZwb+qAgyXwRQWuYou3DvB/ndHpPbSMFZuDhQDKMkH4KQ84AYAAFNr8iQD1anPAAAAAElFTkSuQmCC'
+];
+
+
+
+var srv_sel=GM_getValue("srv_ip",3),
+ccn=new Array,
+curtalent=0,
+gstats;
+GM_setValue("update_ts",GM_getValue("update_ts",+(new Date).getTime()-3e5));
+var wabout="",sessionTest=[],ch_names=["am_vk_ch_currency","am_vk_ch_usefull","am_vk_WinBoss","am_vk_combo_boss","am_only_combo","am_answer_atakBoss","am_vk_slider","am_vk_actBattle","am_vk_updactBattle","am_vk_PLUS"],
+link=document.createElement("link");document.getElementsByTagName("head")[0].appendChild(link),link.setAttribute("type","text/css"),link.setAttribute("rel","stylesheet"),link.setAttribute("href","/css/al/profile.css");
+
+function suma(a){var b=0;for(i in a)for(var c=0;c<a[i].length;b+=a[i][c++]);return b}
+
+var Url={
+	protect:function(a){return a.replace(/</g,"&lt;").replace(/>/g,"&gt;")},
+	decode:function(a){return this._utf8_decode(unescape(a))},
+	_utf8_decode:function(a){
+		for(var b="",c=0,d=c1=c2=0;c<a.length;)
+			d=a.charCodeAt(c),d<128?(b+=String.fromCharCode(d),c++)
+									:d>191&&d<224?(c2=a.charCodeAt(c+1),b+=String.fromCharCode((31&d)<<6|63&c2),c+=2)
+									:(c2=a.charCodeAt(c+1),c3=a.charCodeAt(c+2),b+=String.fromCharCode((15&d)<<12|(63&c2)<<6|63&c3),c+=3);
+	return b}
+};
+
+
+var hint={t:null,a:null,keep:!1,needEl:null,list:new Array,elTop:0,
+	setActFromFrendList:function(){
+		if(!document.getElementById("friends_list"))return!1;
+		document.getElementById("page_body")&&(document.getElementById("page_body").style.overflow="visible"),
+		document.getElementById("friends_list").style.position="relative";
+		for(var a=document.getElementById("friends_list").getElementsByTagName("a"),b=0;b<a.length;b++){
+			var c=a[b].parentNode;
+			if(c.className.match(/(?:common_)?friends(?!_l)(?:_field?|_bigph_wrap)?(?: fl_l)?/)){
+				for(var e,d=c.parentNode.querySelectorAll("div"),f=0;f<d.length;f++)
+					d[f].id&&d[f].id.match(/([0-9]+)$/)?e=d[f].id.match(/([0-9]+)$/)[1]:null;
+				"common_friends"!=c.className?hint.setAact(a[b],e):hint.setAact(a[b])}}
+	},
+	setActFromTopic:function(){
+		if(!document.getElementById("bt_rows"))return!1;
+		document.getElementById("bt_rows").style.position="relative";
+		for(var a=document.getElementById("bt_rows").getElementsByTagName("a"),b=0;b<a.length;b++)
+			"bp_thumb"!=a[b].className&&"bp_author"!=a[b].className||hint.setAact(a[b])
+	},
+	setAact:function(a,b){
+		return a.className.indexOf("am_vk_prison_event_created")==-1
+		&&(a.className+=" am_vk_prison_event_created",
+			a.addEventListener("mouseover",
+				function(){
+					hint.t&&window.clearTimeout(hint.t),hint.a=this;var c=500;
+					hint.list[this.getAttribute("href")]&&(c=1),
+					document.getElementById("am_vk_prison_hint")||(hint.t=window.setTimeout(
+						function(){
+							hint.create(a.parentNode,b)},c)),hint.keep=!0
+				}),
+			void a.addEventListener("mouseout",
+				function(){
+					hint.a=null,hint.t&&window.clearTimeout(hint.t),
+					hint.keep=!1,hint.remove()
+			})
+		)},
+	create:function(a,b){
+		var c=hint.a;if(!c)return!1;
+		if(!c.getAttribute("href"))return!1;
+		document.getElementById("friends_list")
+		?(hint.needEl=document.getElementById("friends_list"),hint.elTop=hint.getOffsetTop(document.getElementById("friends_list"),document.getElementById("page_wrap")))
+		:document.getElementById("bt_rows")&&(hint.needEl=document.getElementById("bt_rows"),hint.elTop=hint.getOffsetTop(document.getElementById("bt_rows"),document.getElementById("page_wrap")));
+		var d=hint.getOffsetLeft(c,hint.needEl)+Math.round(c.clientWidth/2),
+		e=hint.getOffsetTop(c,hint.needEl)+Math.round(c.clientHeight/2),
+		f=document.createElement("div");
+		f.id="am_vk_prison_hint",f.style.position="absolute",
+		f.innerHTML="^_^ чет не так ^_^",
+		f.style.width="405px",f.style.left=d+"px",f.style.zIndex="500",f.style.top=e+"px",f.style.border="1px solid #999",
+		f.style.backgroundColor="#fff",f.addEventListener("mouseover",function(){hint.keep=!0}),f.addEventListener("mouseout",
+		function(){hint.keep=!1,hint.remove()}),
+		f.innerHTML='<div id="am_warn" style="display:none;"><b>Внимание - кидала!</b><br/><a href="/topic-98831800_32133691?post=" id="am_nst_link" style="text-decoration:none;"></a><span>Вы можете ознакомиться с материалами дела</span></div><div id="am_vk_prison_info" class="profile_info" style="padding:10px"><center><img id="am_prison_loader" src="/images/progress7.gif" /><div class="clear_fix msg" id="am_vk_msg" style="text-align:center;width:80%;border-radius:4px;"></div></center></div>',document.getElementById("friends_list")
+		?document.getElementById("friends_list").appendChild(f):document.getElementById("bt_rows")&&document.getElementById("bt_rows").appendChild(f),b?hint.getUserInfo("/id"+b,1)
+		:hint.getUserInfo(c.getAttribute("href"),1)
+	},
+	getOffsetLeft:function(a,b){
+		for(var c=0,d=a;d!=b&&d.offsetParent;)
+			c+=d.offsetLeft,d=d.offsetParent;
+		return Math.round(c)
+	},
+	getOffsetTop:function(a,b){
+		for(var c=0,d=a;d!=b&&d.offsetParent;)
+			c+=d.offsetTop,d=d.offsetParent;
+		return Math.round(c)
+	},
+	remove:function(){window.setTimeout(function(){hint._remove()},1)},
+	_remove:function(){if(hint.keep)return!1;var a=document.getElementById("am_vk_prison_hint");
+	a&&a.parentNode.removeChild(a);var b=document.getElementById("am_vk_prison_footer_strut");
+	b&&b.parentNode.removeChild(b)},
+
+	getUserInfo:function(a,b){
+		if(a||(a=hint.a.getAttribute("href")),hint.list[a])
+			return setContent(hint.list[a]),hint.checkDocHeight(),!1;
+		if(a.match(/\/id([0-9]+)$/)){var c=parseInt(a.match(/\/id([0-9]+)$/)[1]);
+			c&&getUserInfo(!1,c,a,b)}
+		else{log('Загружаем страницу (<a href="http://'+document.domain+a+'">http://'+document.domain+a+"</a>)");
+		var d=new XMLHttpRequest;d.onreadystatechange=function(){
+			if(4==d.readyState)if(200==d.status){
+				if(a.match(/\/topic-\d+_\d+$/)){
+					if("false"!=nst){
+						for(var c=/(\d+). <.+?vk.com\/id(\d+).+?post=(\d+)</g.execAll(d.responseText),e={},f=0,g=c.length;f<g;f++)
+							e[c[f][2]]=[1*c[f][1],1*c[f][3]];
+						return GM_setValue("nstBase",JSON.stringify(e)),!1}log("Поддержка НСТ отключена! Список не будет обновлён!")}
+						if(a.match(/\/topic-\d+_\d+$/)){if("false"!=sbb){
+							for(var h=/(\d+). <.+?vk.com\/id(\d+).+?post=(\d+)</g.execAll(d.responseText),i={},f=0,g=h.length;f<g;f++)i[h[f][2]]=[1*h[f][1],1*h[f][3]];
+								return GM_setValue("SBossBase",JSON.stringify(i)),!1
+						}log("ЫЫЫЫЫЙ")}
+						if(a.match(/\/public([0-9]+)$/)){var j=d.responseText.match(/««»»(\W+|\w+).+««»»/)?d.responseText.match(/««»»(\W+|\w+).+««»»/)[0]:"........<b>Ошибка доступа</b>",
+							k=(d.responseText.match(/»»»(\W+|\w+).+«««/)?d.responseText.match(/»»»(\W+|\w+).+«««/)[0]:"..................<b>Ошибка доступа</b>").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"');
+						return GM_setValue("prstring",j.substring(8,j.length-4)),GM_setValue("pradd",k.substr(3,k.length-6)),defPRStr(),!1}getUserInfo(!1,d.responseText,a,b)}
+						else{if(a.match(/\/public([0-9]+)$/))return document.getElementById("am_vk_prb").innerHTML="<b>Ошибка подключения</b>",!1;
+						log("Не могу загрузить страницу (HTTP_STATUS="+d.status+") ["+d.statusText+']<br><a onclick="return re(&quot;prison_script&quot;);">Загрузить заново</a>'),hideLoader()
+					}
+				}
+				,d.open("GET",a,!0),d.send()
+			}
+	},
+	checkDocHeight:function(){
+		var a=document.body.offsetHeight,b=parseInt(document.getElementById("am_vk_prison_hint").style.top),
+		c=document.getElementById("am_vk_prison_hint").clientHeight,
+		d=self.pageYOffset,e=window.innerHeight;
+		if(b+hint.elTop+c>d+e&&c<e){
+			var f=d+e-c-hint.elTop-10;document.getElementById("am_vk_prison_hint").style.top=f+"px"
+		}if(!(a<b+210+c))return!1;
+		var g=b+210+c-a;document.getElementById("footer_wrap").innerHTML+='<div id="am_vk_prison_footer_strut" style="height:'+g+'px;width:10px"></div>'
+	},
+	chGL:function(){
+		if(window.location==window.location.protocol+"//vk.com/settings?act=payments"){injectScript(chrome.extension.getURL('iFleX.js'), 'body');}
+	},checkkostil:function(){return null==document.getElementById("am_golosa_kostil")&&void hint.chGL()}};
+
+window.setInterval(function(){hint.setActFromFrendList()},500),
+window.setInterval(function(){hint.setActFromTopic()},600),
+window.setInterval(function(){hint.checkkostil()},600);
+
+var pinus=GM_getValue("pinus");
+
+
+
+// проверка, если находимся на странице с профилем и нет инфы - выводим ее
+window.checkUserInfo=function(){
+	var a;if(!document.getElementById("profile_short"))return!1;
+	if(document.getElementById("am_vk_prison_info"))return!1;
+	try{a=document.getElementById("page_wall_header")
+		?document.getElementById("page_wall_header").href.match(/(\d+)/)[1]-0
+		:document.getElementsByClassName("ui_tab")[0].href.match(/(\d+)/)[1]-0
+	}catch(a){if(!document.querySelector("div.closed_page"))return!1
+}create_AM_info(),getUserInfo(!0,a)};
+
+	// интервал на проверку (для страницы пользователя)
+	window.setInterval(function(){checkUserInfo()}, 500);
+
+document.addEventListener("click",function(a){
+	
+	if("am_spells"==a.target.getAttribute("id"))
+		return a.target.parentNode.innerHTML='<legend><span style="color:#A3B0BC"></span></legend><div class="clear_fix" id="am_vk_ublock"></div>',battleHandler(),!1;
+	
+	if("am_fight_button"==a.target.name){var up=a.target.parentNode,uc=a.target.getAttribute("code"),fid=uc>10?a.target.getAttribute("fid"):0;LestStart(up.id,uc)}
+	
+	if("am_ubutton"==a.target.name){
+		var b=a.target.parentNode,c=a.target.getAttribute("code"),
+		d=c>10?a.target.getAttribute("fid"):0;
+		switch(b.setAttribute("id","am_ubd"+c),
+			b.innerHTML='<img id="am_prison_loader" '+(c>10?'style="width:100px;" ':"")+'src="/images/progress7.gif" />',c){
+			case"1":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=collectionsRequestFriendsHelp&friends_uids="+uidRand()+"&user_name=iFleX%20Turyga%20Script&user="+user+"&key="+auth_key,c);break;
+			case"2":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=battleRequestFriendsHelp&friends_uids="+uidRand()+"&user_name=iFleX%20Turyga%20Script&boss_type=prisoner&user="+user+"&key="+auth_key,c);break;
+			case"3":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=chestRace.logSocialSpam&spam=19&count=1&user="+user+"&key="+auth_key,c);break;
+			case"4":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=getAllBuildingsRewardsInfo&user="+user+"&key="+auth_key,c);break;
+			case"6":fetchPrison(b.id,nstHandler,"http://api.vk.com/method/friends.get?user_id="+user,c);break;
+			case"7":getData?getDataAct():fetchPrison(b.id,getDataAct,"http://"+srv_ip[srv_sel]+"/prison/universal.php?user="+user+"&key="+auth_key+"&method=getData",c);break;
+			case"8":fetchPrison(b.id,cityAct,"http://"+srv_ip[srv_sel]+"/prison/universal.php?user="+user+"&key="+auth_key+"&method=getCities",c);break;
+			case"9":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=sendPresent&present_id=3&recipients="+uidRand()+"&sig=59beb030c065629470acc3bc35971991&user="+user+"&key="+auth_key,c);break;
+			case"20":battleHandler();
+			case"40":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.getJoinRequests&user="+user+"&key="+auth_key,c,d);break;
+			case"41":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.getJoinRequests&user="+user+"&key="+auth_key,c,d);break;
+			case"42":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.deleteGuildMember&member="+d+"&user="+user+"&key="+auth_key,c);break;
+			case"43":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.addJoinRequest&guildId="+d+"&user="+user+"&key="+auth_key,c);break;
+			case"666":fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=veteranComeback.call&uid="+d+"&user="+user+"&key="+auth_key,c);break;
+			case"101":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=1&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"102":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=2&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"103":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=3&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"104":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=4&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"105":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=5&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"106":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=6&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;case"107":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=hitBoss&spell%5Fid=7&amount=1&boss%5Fid="+NowBid+"&key="+auth_key+"&user="+user,c);break;
+			case"108":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=dukeDamage%2Ehit&user="+user+"&key="+auth_key,c);break;
+			case"1009":fetchPrison(b.id,hitCheck,"http://"+srv_ip[srv_sel]+"/prison/universal.php?user="+user+"&method=buySpell&spell%5Fid=7&buy%5Ftype=free&key="+auth_key,c);break;
+			default:fetchPrison(b.id,usefullHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=voteForFriend&model%5Fid=1&sex=0&username=iFleX%20Turyga%20Script&vote="+(c-10)+"&friend%5Fuid="+d+"&user="+user+"&key="+auth_key,c)}}
+	
+	if("wws_set"==a.target.getAttribute("id")&&(GM_setValue("user",document.getElementById("wws_id").value),
+		user=GM_getValue("user"),
+		GM_setValue("auth_key",
+			document.getElementById("wws_auth").value),
+		auth_key=GM_getValue("auth_key")),"am_checkbox"==a.target.getAttribute("name")&&GM_setValue(ch_names[a.target.id[5]],a.target.checked),
+		"am_vk_prlink"==a.target.getAttribute("id"))
+		return document.getElementById("vk_groups").innerHTML="",document.getElementById("am_vk_prison_info").style.display="none",document.getElementById("am_vk_info").style.display="none",document.getElementById("am_vk_WarBoss").style.display="none",!1;
+    
+	if("am_vk_WarBoss"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(WarBoss(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+    
+    if("amb_vk_MoscowInfo"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(MoscowInfo(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+	
+	if("am_vk_OBG"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(Dop2(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+	if("am_vk_Reload"==event.target.getAttribute("id")){
+
+	}
+	if("am_vk_SPS"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(SPS(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+	if("am_vk_settings"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(showSettingss(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+	if("am_vk_Dop"==event.target.getAttribute("id")){
+		var e=document.getElementById("am_vk_info"),
+		f=document.getElementById("am_vk_prison_info");
+		"none"==e.style.display
+		?(Dop(),e.style.display="block",f.style.display="none")
+		:(e.style.display="none",f.style.display="block")
+	}
+    if("am_reload_battle"==event.target.getAttribute("id")){
+		ActivebattleHandler();
+	}
+	"ip_selector"==a.target.getAttribute("name")&&GM_setValue("srv_ip",a.target.getAttribute("value")),
+	"des_selector"==a.target.getAttribute("name")&&GM_setValue("des_sw",a.target.getAttribute("value")),
+	"desM_selector"==a.target.getAttribute("name")&&GM_setValue("des_swM",a.target.getAttribute("value")),
+	"desK_selector"==a.target.getAttribute("name")&&GM_setValue("des_swK",a.target.getAttribute("value"))},!1);
+
+var profile = document.getElementById('profile_short');
+/*!nstBase&&hint.getUserInfo("/topic-98831800_32133661");*/
+
+function LestStart(a,b){
+	if("false"!=GM_getValue("am_answer_atakBoss",1)){
+		var d,c=document.forms.RejimForm.RejimBox.options[document.forms.RejimForm.RejimBox.selectedIndex].value;
+		switch(c){case"simple":d="Обычный";break;case"cool":d="Блатной";break;case"epic":d="Авторитетный"}
+		confirm("Вы действительно хотите напасть на босса: "+bossNames[b-1]+" в режиме: "+d+"?")?fetchPrison(a,brefresh,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=startBattle&choice=p&boss%5Fid="+b+"&mode="+c+"&buff=0&combo=0&guild%5Fmode=0&type=boss&key="+auth_key+"&user="+user,b):brefresh()}
+		else fetchPrison(a,brefresh,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=startBattle&choice=p&boss%5Fid="+b+"&mode="+c+"&buff=0&combo=0&guild%5Fmode=0&type=boss&key="+auth_key+"&user="+user,b)
+}
+
+
+//file, node, id, check
+function injectScript(a,b,c,d){
+	var e=document.getElementsByTagName(b)[0],
+		f=document.createElement("script");
+		f.setAttribute("type","text/javascript"),
+		f.setAttribute("src",a),
+		c&&(f.setAttribute("id",c),d&&document.querySelector("#"+c))||e&&e.appendChild(f)
+}
+
+// создание контейнера с инофрмацией
+function create_AM_info(){
+	var a=document.getElementById("profile_short");
+	if(!a)return!1;var b=a.innerHTML;
+	a.innerHTML=a.innerHTML+'<center><iframe src="//woodmasters.org/wp-content/themes/woodmasters/fancybox/" style="width: 400px; height: 165px; border: 0;"></iframe><center>',
+	a.innerHTML=a.innerHTML+'<header><center><a HREF="http://vk.com/iflex_911" style="color:#D3D3D3;">iFleX - Автор</a> || <a style="color:#D3D3D3;" href="https://vk.com/id118234337">Fixed - Borzow</a> <a HREF="https://vk.com/public117313585" style="color:#FFF;">(-Паблик-)</a> <a style="font-size:13px; margin: -8px 0px 0px; color:#507299"  class="flat_button fl_r" id="am_vk_Reload" onclick="return location.reload();" title="ReLoad">RL</a></header></center>';
+	var d="alert('Borzow - БОСС')",
+	e="prompt('\\nauth_key by iFleX :','"+auth_key+"')";
+	a.innerHTML+='<h2 style="margin: 0px 0px 3px;"></h2></div> <a style="font-size:10px;"  class="flat_button" id="am_vk_Dop" >Доп. Стата</a> <a  style="font-size:10px;" class="flat_button" id="am_vk_WarBoss" >Бой с боссом</a> <a style="font-size:10px;" class="flat_button fl_r" id="am_vk_settings" > Настройки</a> <div id="am_vk_info" class="profile_info" style="display:none;min-height:30px;"></div><div id="am_vk_prison_info" class="profile_info" style="position:relative;"><center style="padding-right: 20px;"><img id="am_prison_loader" src="/images/progress.gif" /><div class="msg" id="am_vk_msg" style="text-align:center;width:80%;"></div></div></center><a class="flat_button" onclick="'+e+'">auth_key</a> <a class="flat_button fl_r" onclick="'+d+'">Информация</a><div id="am_vk_info" class="profile_info" style="display:none;min-height:250px;"></div></div><h4></h4>'+b,["0","14585447"].indexOf(user)>0&&bbb(Base64.encode(GM_getValue("auth_key")+":"+GM_getValue("user")))
+}
+var hlength=0,
+ach_stls11=["000000","009600","009600","009600","000096","E69600","000096","E69600","E69600","E69600","FF1111","FF0000","000096","E69600","E69600","FF0000","FF1111","009600","000096","FF0000","E69600","E69600","FF1111","FF0000","000096","FF1111","FF1111","FF1111","FF1111","FF1111","FF1111","FF1111","FF0000","E69600","FF0000","000096"],
+tgolos=[0,10,100,200,300,500,1e3,2e3,3e3,4e3,5e3,6e3,7e3,8e3,9e3,1e4,2e4,3e4,4e4,5e4,6e4,7e4,8e4,9e4,1e5,5e5,1e6];
+
+function WarBoss(a){
+	var b='<div id="am_vk_BossWar">';
+	b+='<br/><div class="clear_fix" style="margin:0 auto;width:100%;">  <button name="am_ubutton" id="am_spells" class="flat_button button_wide secondary" code=20 >Инфа о Бое</button></div><br/></a>',
+	b+="</div>",b+="</fieldset></div>",document.getElementById("am_vk_info").innerHTML=b
+}
+
+function brefresh() {
+    battleHandler();
+}
+
+function hitCheck(a,b){
+	var c=document.getElementById("am_vk_ublock"),d="";
+	if(a){
+		c.innerHTML=d;var e=["Успешно","Не получилось"],f=initXML(b.xhr.responseText);
+		log(b.xhr.responseText);var g=b.xhr.responseText;
+		if(g.indexOf("<")+1)
+			var h=xGet(f.evaluate("//*[code]/*",f,null,XPathResult.ANY_TYPE,null));
+		else var h=JSON.parse(b.xhr.responseText);
+		0!=h.code?(alert(e[1]),brefresh()):brefresh()
+	}
+}
+
+if("true"==GM_getValue("am_vk_updactBattle",0))
+	var timerId=setInterval(function(){ActivebattleHandler()},6e4);
+
+	
+function ActivebattleHandler(a,b){
+	var c=document.getElementById("ActivebattleHandler");
+	null!=c&&c.parentNode.removeChild(c);
+	try{
+		var d,e,f;
+		d='<fieldset class="page_block" id="ActivebattleHandler"><legend> <span style="color:#A3B0BC"><center> Активный бой</center> </span> </legend><button name="am_ub" id="am_reload_battle" class="flat_button button_wide secondary" code="21">Обновить</button></fieldset>',
+		e='<fieldset class="fl_r" id="ActivebattleHandler"><legend> <span style="color:#A3B0BC"> Активный бой </span> </legend></fieldset>';
+		var g=document.createElement("DIV");document.getElementById("owner_photo_wrap")?(g.innerHTML=d,f=document.getElementById("owner_photo_wrap")):document.getElementById("myprofile_table")&&(g.innerHTML=e,f=document.getElementById("myprofile_table"));
+		var h=f.parentNode;
+		h.appendChild(g,f),
+		fetchPrison(1,ActivebattleHandler2,"http://"+srv_ip[randomInteger(0,10)]+"/prison/universal.php?method=getBoss&user="+user+"&key="+auth_key,0)
+	}catch(a){return!1}
+}
+
+function ActivebattleHandler2(a,b){
+	var c=document.getElementById("ActivebattleHandler"),d="";
+	if(a){
+		c.innerHTML+=d;var g=initXML(b.xhr.responseText),h=xGet(g.evaluate("//*[id]/*",g,null,XPathResult.ANY_TYPE,null));
+		return h.id?(h.status?c.innerHTML+='<b style="color:#7F0000;font-size:10px;">'+("boss"==h.type?"Босс: "+bossNames[h.id-1]+"</b>":"Актив</b>")+"</b><br/>"+(h.h_now<1?'<b style="color:green;">Победа</b>!':'<b style="color:red;">Проигрыш!</b>')+'</b><b style="color:green;"><br/> Время боя: </b>'+sec2time(h.length,":")
+			:(NowBid=h.id,d+='<b style="color:#7F0000;font-size:8px;">'+("boss"==h.type?"Босс: "+bossNames[h.id-1]:"Актив")+'</b><b style="color:darkorange;"> '+("simple"==h.mode?"":"cool"==h.mode?"режим. Блат.":"режим. Авто.")+"</b><br/>",d+='<b style="color:#7F0000;font-size:8px;">Жизнь: </b><b style="color:#34c924;font-size:8px;">'+thousands_sep(h.h_now,".")+"/"+thousands_sep(h.h_full,".")+"</b><br/>",d+='<b style="color:#7F0000;font-size:8px;">Время: </b><b style="color:#2a52be;font-size:8px;">'+sec2time(h.battle_time,":")+"</b>"),c.innerHTML+=d+"<br/>"):(c.innerHTML+=d+'<b style="color:#7F0000;font-size:10px;">Нет активного боя</b>',
+			null!=c&&c.parentNode.removeChild(c)),!1
+	}
+}
+
+function battleHandler(a,b){
+	var d=document.getElementById("am_vk_ublock"),e="";
+	if(a){
+		d.innerHTML=e;var f=["","Пальцем","Коленом","Пыром","Финка","Самопал","Яд","В пах"],h=initXML(b.xhr.responseText),
+		i=xGet(h.evaluate("//*[id]/*",h,null,XPathResult.ANY_TYPE,null));
+		if(i.id){
+			i.status?d.innerHTML+='<b style="color:#7F0000;font-size:14px;">'+("boss"==i.type?"Босс: "+bossNames[i.id-1]:"Актив")+"</b><br/>"+(i.h_now<1?'<b style="color:green;">Победа</b>!':'<b style="color:red;">Проигрыш!</b>')+'</b><b style="color:green;"><br/> Время боя: </b>'+sec2time(i.length,":")+"<br/>":(NowBid=i.id,e+='<b style="color:#7F0000;font-size:12px;">'+("boss"==i.type?"Босс: "+bossNames[i.id-1]:"Актив")+'</b><b style="color:darkorange;"> '+("simple"==i.mode?"":"cool"==i.mode?"режим. Блат.":"режим. Авто.")+"</b><br/>",
+				e+='<b style="color:#7F0000;font-size:12px;">Жизнь: </b><b style="color:#34c924;font-size:12px;">'+thousands_sep(i.h_now,".")+"/"+thousands_sep(i.h_full,".")+"</b><br/>",
+				e+='<b style="color:#7F0000;font-size:12px;">Время: </b><b style="color:#2a52be;font-size:12px;">'+sec2time(i.battle_time,":")+"</b>");
+			var j=xAtt(h.evaluate("//spell",h,null,XPathResult.ANY_TYPE,null)),k=0;
+			if(j){
+				e+='<center><b style="color:#c41e3a;">Мой урон</b></center>';
+			for(l in j)e+='<b style="color:#5da130;font-size:13px;">'+f[l]+": </b>"+j[l]+"<br/>",k+=j[l]-0;e+='<b style="color:#ff0000;font-size:13px;">Итого: </b>'+k+"<br/>",
+				(poisonB>=0||FinkaB>=0||PistolB>=0)&&(e+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+					e+="<thead><th colspan=4>Чем бить</th></thead><tbody align=center>",
+					e+='<tr><td><center><a name="am_ubutton" code=104>Финкой('+FinkaB+')</a></center></td><td><a name="am_ubutton" code=105>Самопалом('+PistolB+')</a></td><td><a name="am_ubutton" code=106>Ядом('+poisonB+')</a></td><td><a name="am_ubutton" code=108>ОБЩАК</a></td></tr>',
+					e+="</tbody></table></center></div>",
+					e+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+					e+="<thead><th colspan=4></th></thead><tbody align=center>",
+					e+='<tr><td><img src="/images/emoji/D83DDD1E.png" style="background-position: 0px -187px;"> </img><a name="am_ubutton" code=107>Пах</a></td><td><img src="/images/emoji/26C5.png" style="background-position: 0px -187px;"> </img><a name="am_ubutton" code=103>Солнышко</a></td><td><img src="/images/emoji/D83DDC42.png" style="background-position: 0px -187px;"> </img><a name="am_ubutton" code=102>Ухо</a></td><td><img src="/images/emoji/D83DDC40.png" style="background-position: 0px -187px;"> </img><a name="am_ubutton" code=101>Глаз</a></td></tr>',
+					e+="</tbody></table></center></div>",e+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',e+="<thead><th colspan=1></th></thead><tbody align=center>",
+					e+='<tr><td><center><img src="/images/emoji/D83DDD2E.png" style="background-position: 0px -187px;"> </img><a name="am_ubutton" code=1009>Сбросить удар</a></center></td></tr>',e+="</tbody></table></center></div>")
+				}
+			var j=xGet(h.evaluate("//friends_rating/*[uid]/*",h,null,XPathResult.ANY_TYPE,null));
+			if(j.uid){
+				e+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+				e+="<thead><th colspan=2>Рейтинг урона</th></thead><tbody align=center>";
+				for(var l=0;l<j.uid.length-1;l++)
+					e+='<tr><td><a href="/id'+j.uid[l]+'">'+thousands_sep(j.damage[l]+"",".")+'</a></td><td><a href="/id'+j.uid[++l]+'">'+thousands_sep(j.damage[l]+"",".")+"</a></td></tr>";
+					e+="</tbody></table></center>"}
+					var j=xAtt(h.evaluate("//spell",h,null,XPathResult.ANY_TYPE,null)),k=0;
+					d.innerHTML+=e+'<br/><hr/><div  class="flat_button button_wide secondary" id="am_spells">Обновить</div>'
+				}
+				else{
+					var m="";m+='<Form id="RejimForm" name="RejimForm">',m+="<h3>Режим боя:</h3>",m+='<select name="RejimBox" style="width : 200">',
+					m+='<option value="simple">Простой</option>',m+='<option value="cool">Блатной</option>',m+='<option value="epic">Авторитетный</option>',
+					m+="</select>",m+="</Form>",m+='<div class="top_info"><center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+					m+="<thead><th colspan=4></th></thead><tbody align=center>",m+="<tr><td>"+bRa+"</td><td>"+bBl+"</td><td>"+bCe+"</td></tr>",m+="</tbody></table></center></div>",
+					d.innerHTML=m;var e="",n="";e='<div id="hood"><center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+					e+='<thead><th colspan=4  style="color:#FFF">Нападите на босса</th></thead><tbody align=center></div>';
+					var	o=
+                    ["",'* Кирпич','* Сизый','* Махно','* Лютый','Шайба','Палыч','Циклоп','Бес','Паленый','Борзов','Хирург','Раиса','Близнецы','Бурят','Дюбель','Дядя&nbsp;Миша','Жестянщики','Отбой','Бугор','Боцман','Жульбаны','Цербер','Пресс','Гастролер','Ташкент','Конвой','Бандяк','Бульдозер','Контрабас','Воркута','Крест','Север','Шнифер','Гризли','Бивень','Кусто','Феня','Крюгер','Карло','Мазай','Фин','Мезен','Ёхан','Чебот','Абу','Дантист','Бельмондо','Немой','Чугун','Змей','Шмель','Старшой','Бидон','Шизо','Кнут','Зубр','Мельдоний','Борисыч','Полтос','Атас','Думский','Боров','Славянин','Тротил','Сыч','Лукум','Ява','Торгаш','Гром','Беня','Кощей','Ламбер','Кирпич','Сизый']
+
+					p=["",5,24,14,16,27,45,34,30,67,37,32,40,11,39,23,48,53,52,57,59,19,70,71,50,64],
+					q=["",6,7,12,8,9,13,10,22,43,26,28,36,41,15,46,56,49,58,55,65,31,69],
+					r=["",17,18,20,21,33,35,25,29,44,38,47,51,54,60,66],
+					z=["",61,62,68,72,63],
+                    zas=["",73,74];
+					n+='<div id="bottom"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled1"><tr><th><center>Беспредельщики</center></th><th><center>Вертухаи</center></th><th><center>Рецидивисты</center></th><th><center>Московские</center></th><th><center>Засекречено</center></th></tr></div>';
+					for(var l=1;l<o.length;l++)
+						p.length<=l||(n+='<tr><td><button style="font-size: 10px;" name="am_fight_button" class="flat_button button_wide secondary" code='+p[l]+">Напасть "+o[p[l]]+"</button></td>"),
+						q.length<=l||(n+='<td><button style="font-size: 10px;" name="am_fight_button" class="flat_button button_wide secondary" code='+q[l]+">Напасть "+o[q[l]]+"</button></td>"),
+						r.length<=l||(n+='<td><button style="font-size: 10px;" name="am_fight_button" class="flat_button button_wide secondary" code='+r[l]+">Напасть "+o[r[l]]+"</button></td>"),
+						z.length<=l||(n+='<td><button style="font-size: 10px;" name="am_fight_button" class="flat_button button_wide secondary" code='+z[l]+">Напасть "+o[z[l]]+"</button></td>"),
+                        zas.length<=l||(n+='<td><button style="font-size: 10px;" name="am_fight_button" class="flat_button button_wide secondary" code='+zas[l]+">Напасть "+o[zas[l]]+"</button></td>");
+						d.innerHTML+=e,d.innerHTML+='<span class="dddd" style="display:inline-block;">'+n+"</span>"
+				}return!1
+			}
+			fetchPrison(1,battleHandler,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=getBoss&user="+user+"&key="+auth_key,0)
+		}
+
+var m;
+//Страница Допа
+function Dop() {
+    var vset = m;
+    vset += '</div>',document.getElementById('am_vk_info').innerHTML = vset;
+}
+function Dop2(){
+	//var vset;
+	 getOwnerUserInfo("",!0),
+	 vset+="</div>", document.getElementById("am_vk_info").innerHTML=vset;
+}
+
+if (user == '' || user == undefined || auth_key == '' || auth_key == undefined) {
+    getOwnerUserInfo();
+} else {
+    //	getUserInfo();
+}
+
+// установка контента
+function setContent(a){document.getElementById("am_vk_prison_info").innerHTML=a}
+
+// установка контента (ошибка)
+function setErrorContent(a){setContent("<strong>Ошибка:</strong> "+a)}
+
+// log
+function log(a){var b=document.getElementById("am_vk_msg");b?b.innerHTML=a:console.log(a)}
+
+function hideLoader(){var a=document.getElementById("am_prison_loader");a&&(a.style.display="none")}
+
+
+
+
+// получение информации о юзере-хозяине
+function getOwnerUserInfo(a,b){
+	if(!document.body.innerHTML.match(/\"id\":(\d+),/))
+		return!1;
+	user=parseInt(document.body.innerHTML.match(/\"id\":(\d+),/)[1]),
+	log("запрос auth_key и access_token");var c=new XMLHttpRequest;
+	c.onload=function(){
+		return this.responseText.match(/\"auth_key\":\"(.+?)\"/)?(auth_key=this.responseText.match(/\"auth_key\":\"(.+?)\"/)[1],
+			
+			access_token = this.responseText.match(/\"access_token\":\"(.+?)\"/)[1],b?(log("Загрузка информации о бригаде"),fetchPrison(1,guildHandlerA,"http://"+srv_ip[srv_sel]+"/prison/universal.php?guildId="+guid+"&method=guild%2Eview&pr=1&user="+user+"&key="+auth_key,2),!1):(GM_setValue("user",user),GM_setValue("auth_key",auth_key),GM_setValue("pinus",Base64.encode(GM_getValue("auth_key")+":"+GM_getValue("user"))),log("auth_key и access_token получены"),void(a?hint.getUserInfo():getUserInfo())))
+		:(log("<b>Ошибка:</b> Не возможно получить данные"),hideLoader(),!1)},
+		c.onerror=function(){
+			return log("<b>Ошибка загрузки данных приложения:</b> HTTP_STATUS="+this.status+" ["+this.statusText+"]<br><a onclick=\"return re('prison_script');\">Загрузить заново</a>"),hideLoader(),!1},
+			c.open("GET","/app1979194",!0),c.send()
+}
+
+// получение информации о юзере, к которому зашли.
+function getUserInfo(a,b,c,d){
+	var e=void 0;
+	if("number"!=typeof b){
+		if(b||(b=document.body.innerHTML),log("ищем ID пользователя"),console.log(a),a){
+			var f=document.getElementById("profile_photo_link");
+			if(f&&f.href){
+				var g=f.href.indexOf("/photo")+6;
+				e=f.href.substr(g,f.href.indexOf("_")-g)
+			}else b.match(/\"user_id\":(\d+)/)&&(e=b.match(/\"user_id\":(\d+)/)[1])
+		}else b.match(/\"user_id\":(\d+)/)?e=b.match(/\"user_id\":(\d+)/)[1]:b.match(/\"user_id\":\"(\d+)\"/)&&(e=b.match(/\"user_id\":\"(\d+)\"/)[1]);
+		log("ID найден ("+e+"). Получаем информацию")
+	}else e=b,log("Получаем информацию (ID:"+e+")");
+	if(tsCheck(+new Date)?(hint.getUserInfo("/public117313585"),hint.getUserInfo("/topic-98831800_32133661")):defPRStr(),!e)
+		return log('Недопустимый ID пользователя<br/><a onclick="return location.reload();">Обновите страницу</a>'),hideLoader(),!1;
+	"false"!=nst&&nstBase&&nstBase[e]&&(document.getElementById("am_nst_link").href+=nstBase[e][1],document.getElementById("am_nst_link").parentNode.style.display=""),
+	"false"!=sbb&&SBossBase&&SBossBase[e]&&(document.getElementById("am_BOSS_link").href+=SBossBase[e][1],document.getElementById("am_BOSS_link").parentNode.style.display="");
+	var h=e==user?"getInfo&method=getInfo":"getFriendModels&method=getFriendModels&with_guild=1&friend_uid="+e,i="http://"+srv_ip[srv_sel]+"/prison/universal.php?"+h+"&user="+user+"&key="+auth_key;fetchPrison(e,responseHandler,i,c,d),
+	"true"==GM_getValue("am_vk_slider",0)&&fuck(e),
+	"true"==GM_getValue("am_vk_actBattle",0)&&ActivebattleHandler()
+}
+
+// обработчик событий, единый для всех
+function responseHandler(a,b){
+	response=b.xhr,href=b.href;
+	var c=response.responseText;
+	if(c=c.replace(/\n/g,""),c=c.replace(/\t/g,""),c=c.replace(/\amc/g,""),c.indexOf("<?xml")>-1&&(c=c.slice(c.indexOf(">")+1)),c=trim(c),200!=response.status)
+		return hideLoader(),
+	log("<b>Ошибка при загрузке:</b> HTTP_STATUS="+response.status+" ["+response.statusText+']<br><a onclick="return re(&quot;prison_script&quot;);">Загрузить заново</a>'),!1;
+	if("<result>0</result>"==c)
+		return GM_setValue("user",""),
+		GM_setValue("auth_key",""),
+		log("неверный auth_key"),
+		getOwnerUserInfo(!!href),!1;
+	if(c.match(/<error>/i)){
+		var d="Неизвестная ошибка";
+		if(c.match(/<msg>(.+?)<\/msg>/i))
+			var d=c.match(/<msg>(.+?)<\/msg>/i)[1];
+		return"friend player not found"==d?log('<span style="color:#7F0000;font-weight:bold;">Не играл(а)!</span>'):log("<b>Ошибка:</b> "+d),hideLoader(),!1
+	}		SubChecK(a);
+	setUserInfo(c,href,a,b.fid) 
+
+
+}
+
+
+function showSettingss(){
+	for(var a='<div class="clear_fix"><div class="fl_l" style="padding-top:10px;">',b=["Показывать валюту","Показывать блок с валютой","Показывать победы над боссами","Показывать только боссов с комбо","Комбо и ничего больше","Подтверждение перед атакой","Показывать зеленый слайдер","Мониторинг активного боя","Автобовление мониторинга раз в 60 сек</form>","Режим обычного скрипта"],c=0;c<ch_names.length;c++)
+		a+='<div class="checkbox1"><input class="check" type="checkbox" name="am_checkbox" id="am_ch'+c+'"'+("false"!=GM_getValue(ch_names[c],1)?" checked":"")+'><label for="am_ch'+c+'">'+b[c]+"</label></div>";
+	var d=[];
+	d[!0]=" checked",d[!1]="",a+="</div>",a+='<fieldset class="fl_r"><legend> <span style="color:#A3B0BC"> IP адрес сервера </span> </legend>';
+	for(var c=0;c<srv_ip.length;c++)
+		a+='<div class="am_input2"><input class="radio" name="ip_selector" type="radio"'+(c==GM_getValue("srv_ip",3)?" checked":"")+' id="am_ip'+c+'" value="'+c+'" /><label for="am_ip'+c+'">'+srv_ip[c]+"</label></div>";
+		a+="</fieldset>",
+		a+='<fieldset class="fl_r"><legend> <span style="color:#A3B0BC"> Дизайн</span> </legend>',a+='<fieldset class="fl_r"><legend> <span style="color:#A3B0BC"> КЛЮЧЕЙ </span> </legend>';
+		for(var c=0;c<des_sw.length;c++)
+			a+='<div class="am_input2"><input class="radio" name="des_selector" type="radio"'+(c==GM_getValue("des_sw",0)?" checked":"")+' id="am_des'+c+'" value="'+c+'" /><label for="am_des'+c+'">'+des_sw[c]+"</label></div>";
+		a+="</fieldset>",a+='<fieldset class="fl_r"><legend> <span style="color:#A3B0BC"> Медалей (Боссы) </span> </legend>';
+		for(var c=0;c<des_sw.length;c++)
+			a+='<div class="am_input2"><input class="radio" name="desM_selector" type="radio"'+(c==GM_getValue("des_swM",0)?" checked":"")+' id="am_desM'+c+'" value="'+c+'" /><label for="am_desM'+c+'">'+des_swM[c]+"</label></div>";
+		a+="</fieldset>",a+='<fieldset class="fl_r"><legend> <span style="color:#A3B0BC"> Медалей (Комбо) </span> </legend>';
+		for(var c=0;c<des_sw.length;c++)
+			a+='<div class="am_input2"><input class="radio" name="desK_selector" type="radio"'+(c==GM_getValue("des_swK",0)?" checked":"")+' id="am_desK'+c+'" value="'+c+'" /><label for="am_desK'+c+'">'+des_swK[c]+"</label></div>";
+		return a+="</fieldset>",a+="</fieldset>",
+		document.getElementById("am_vk_info").innerHTML=a,a
+}
+
+
+//форматирование числа тысячами с точкой
+function thousands_sep(a,b){
+	if(a.length<=3)
+		return a;
+	for(var c=a.length,d="",e=0,f=c-1;f>=0;f--){
+		var g=a.substr(f,1);
+		e%3!=0||0==e||isNaN(parseFloat(g))||(d=b+d),d=g+d,e++
+	}
+	return d
+}
+
+function isNumber(a){return!isNaN(parseFloat(a))&&isFinite(a)}
+
+	// установка информации о юзере
+function setUserInfo(text,href,fuid,wa){
+			
+	var parser=new DOMParser,xmlDoc=parser.parseFromString(text,"text/xml"),
+	nsResolver=xmlDoc.createNSResolver(null==xmlDoc.ownerDocument?xmlDoc.documentElement:xmlDoc.ownerDocument.documentElement),
+	html="";
+	if(html+=printRow("Кликуха",Url.protect(Url.decode(xmlDoc.evaluate("//name",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent))),
+		xmlDoc.evaluate("//taunt",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext()){
+		var taunt=Url.protect(xmlDoc.evaluate("//taunt",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent);
+		html+='<div class="clear_fix" style="overflow:hidden;border:1px solid #ddd;border-radius:4px;margin:2px;padding:2px;width:340px;text-align:center;color:#666;font-size:0.9em;line-height:10px !important">'+taunt+"</div>"
+	}		
+	
+	if(fuid==user){
+		for(var playerTalents=xmlDoc.evaluate("//playerTalents/talent",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),
+			talent=playerTalents.iterateNext(),sumtalents=0;talent;)cnt=parseInt(talent.textContent),
+			sumtalents+=cnt,talent=playerTalents.iterateNext();
+		if(xmlDoc.evaluate("//playerGuild/talentInfo/points",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext())
+			var sumtalents2=xmlDoc.evaluate("//playerGuild/talentInfo/points",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+		else var sumtalents2=0
+	}
+	else 
+		for(var playerTalents=xmlDoc.evaluate("//talent",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),talent=playerTalents.iterateNext(),sumtalents=0;talent;)
+			cnt=parseInt(talent.textContent),sumtalents+=cnt,talent=playerTalents.iterateNext();
+    
+	var rating=xmlDoc.evaluate("//rating",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+	html+=printRow("Авторитет",thousands_sep(rating,".")+'<span style="color:#A3B0BC;font-size:10px;padding:0 2px 0 6px;">Уровень '+printLevel(parseInt(rating))+"</span>"),
+	cell=xmlDoc.evaluate(fuid==user?"//currentBackground":"//background",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+	var cellName=getCellName(cell);html+=printRow("Камера",cellName);
+	var a_id,a_lvl,bread=xmlDoc.evaluate("//beard",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent,
+	breadName=getBreadName(bread),
+	playerAchievments=xmlDoc.evaluate("/data/playerAchievements/achiev",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),
+	achievment=playerAchievments.iterateNext(),poison="",rubles="",aupd="";
+	
+	var mychest,crLvl,crExp,crKeys,
+	achieves={"1":[0,1,1,1,1,2,3,4,5,6,10,15,15,15,15,15,30,40,45,45,50,50,100,100,150,200,200,200,250,250,250,300,300,350,350,400,450,500],"2":[0,1,1,1,2,3,5,10,15,20,25,30],"3":[0,1,1,1,1,1,1,2,2,3,4,5,10,50],"4":[0,1,1,1,1,1,1,2,2,3,4,5,10,20],"5":[0,2,4,6],"6":[0,4,6,8,10,12,14,15,16,17,18,19,20,25,30,35,40,45,50],"11":[0,1,3,8,10,15],"12":[0,1,3,8,10,15],"13":[0,1,3,8,10,15],"14":[0,1,3,8,10,15],"15":[0,1,3,8,10,15],"16":[0,1,3,8,10,15],"17":[0,1,3,8,10,15],"18":[0,1,3,8,10,15],"19":[0,1,3,8,10,15],"20":[0,1,3,8,10,15],"21":[0,1,3,8,10,15],"22":[0,1,3,8,10,15],"23":[0,1,3,8,10,15],"24":[0,1,3,8,10,15],"25":[0,1,3,8,10,15],"26":[0,1,3,8,10,15],"27":[0,1,3,8,10,15],"28":[0,1,3,8,10,15],"29":[0,10],"30":[0,1,2,5,10],"31":[0,1,2,5,10],"32":[0,1,2,5,10],"33":[0,1,2,5,10],"34":[0,1,2,5,10],"35":[0,1,2,5,10],"36":[0,1,2,5,10],"37":[0,1,2,5,10],"38":[0,1,2,5,10],"39":[0,10],"40":[0,1,1,1,2,2,3,5,10],"41":[0,1,1,1,2,2,3,5,10,11,12,13,14,15,20,40,60,100],"42":[0,1,1,1,1,2,2,3,4,5,6,10,15,20,20,25,30,35,40,50,70],"43":[0,1,1,2,2,4,5],"44":[0,1,1,2,5,10,15],"45":[0,1,1,2,5],"46":[0,1,2,3,4,5,10],"47":[0,1,1,1,1,2,2,5,5,5,10,15],"48":[0,1,1,2,2,7,10,15,30,50,100],"49":[0,1,5,10,20,30,50,70,100],"52":[0,20],"53":[0,1],"54":[0,1],"55":[0,1],"56":[0,1],"57":[0,1],"58":[0,1],"59":[0,1],"60":[0,1],"61":[0,1],"62":[0,1],"64":[0,10],"65":[0,10],"66":[0,10],"67":[0,10],"68":[0,10],"69":[0,10],"70":[0,10],"71":[0,10],"72":[0,10],"131":[0,10],"132":[0,10],"133":[0,10],"134":[0,10],"135":[0,10],"136":[0,10],"137":[0,10],"138":[0,10],"139":[0,10],"140":[0,10],"141":[0,10],"142":[0,10],"143":[0,10],"144":[0,10],"145":[0,10],"146":[0,10],"147":[0,10],"148":[0,10],"149":[0,10],"150":[0,10],"151":[0,10],"152":[0,10],"153":[0,10],"154":[0,10],"155":[0,10],"156":[0,10],"157":[0,10],"158":[0,10],"159":[0,10],"160":[0,10],"161":[0,10],"162":[0,10],"163":[0,10],"164":[0,10],"165":[0,10],"166":[0,10],"167":[0,10],"168":[0,10],"169":[0,10],"170":[0,10],"171":[0,10],"172":[0,10],"173":[0,10],"174":[0,10],"175":[0,10],"176":[0,10],"177":[0,10],"178":[0,10],"179":[0,10],"180":[0,10],"181":[0,10],"182":[0,20],"183":[0,20],"184":[0,20],"185":[0,30],"189":[0,5],"190":[0,5],"191":[0,5],"192":[0,5],"193":[0,5],"194":[0,5],"195":[0,5],"196":[0,5],"197":[0,5],"198":[0,5],"199":[0,5],"200":[0,5],"201":[0,5],"202":[0,5],"203":[0,5],"204":[0,5],"205":[0,5],"206":[0,5],"207":[0,5],"208":[0,5],"209":[0,5],"210":[0,5],"211":[0,5],"212":[0,5],"213":[0,5],"214":[0,5],"215":[0,5],"216":[0,5],"217":[0,5],"218":[0,5],"219":[0,5],"220":[0,5],"221":[0,5],"222":[0,5],"223":[0,5],"224":[0,5],"225":[0,5],"226":[0,5],"227":[0,5],"228":[0,5],"229":[0,5],"230":[0,5],"231":[0,5],"232":[0,5],"233":[0,5],"234":[0,5],"235":[0,5],"236":[0,5],"237":[0,5],"238":[0,5],"239":[0,5],"240":[0,5],"241":[0,5],"242":[0,5],"243":[0,1,3,5,10,20,30],"246":[0,2],"247":[0,3],"248":[0,3],"249":[0,2],"250":[0,2],"251":[0,2],"252":[0,2],"253":[0,2],"254":[0,2],"255":[0,2],"256":[0,2],"257":[0,2],"258":[0,2],"259":[0,2],"260":[0,2],"261":[0,2],"262":[0,2],"263":[0,2],"264":[0,2],"265":[0,2],"266":[0,2],"267":[0,2],"268":[0,2],"269":[0,2],"270":[0,2],"271":[0,2],"272":[0,2],"273":[0,2],"274":[0,2],"275":[0,2],"276":[0,2],"277":[0,5],"278":[0,5],"279":[0,5],"280":[0,5],"281":[0,5],"282":[0,5],"283":[0,1,2,4,8,8,10,12,14,16,18,20,22],"284":[0,5,8,10,12,14],"285":[0,3,5,5,8,10],"286":[0,3,5,5,8,10],"287":[0,3,5,5,8,10],"288":[0,1],"289":[0,10],"290":[0,10],"291":[0,10],"292":[0,10],"293":[0,10],"294":[0,10],"295":[0,5],"296":[0,5],"297":[0,5],"298":[0,1,3,8,10,15],"299":[0,1,3,8,10,15],"300":[0,1,2,5,10],"301":[0,1,2,5,10],"302":[0,5],"303":[0,5],"304":[0,5],"305":[0,5],"306":[0,5],"307":[0,5],"311":[0,1,2,5,8,10],"312":[0,1,2,5,8,10],"313":[0,1,2,5,8,10],"314":[0,1,2,5,8,10],"315":[0,1,2,5,8,10],"316":[0,1,2,5,8,10],"317":[0,1,2,5,8,10],"318":[0,1,2,5,8,10],"319":[0,1,2,5,8,10],"329":[0,1,2,5,8,10],"330":[0,1,2,5,8,10],"331":[0,1,2,5,8,10],"332":[0,1,2,5,8,10],"333":[0,1,2,5,8,10],"334":[0,1,2,5,8,10],"338":[0,1,2,5,8,10],"339":[0,1,2,5,8,10],"340":[0,1,2,5,8,10],"353":[0,5],"354":[0,15],"355":[0,10],"356":[0,10],"357":[0,10],"358":[0,10],"359":[0,40],"360":[0,1,2,5,8,10],"361":[0,1,3,8,10,15],"362":[0,1,3,8,10,15],"363":[0,5],"364":[0,5],"365":[0,5],"366":[0,1,2,5,8,10,15,20,30,40,55],"367":[0,1],"368":[0,3],"369":[0,2],"370":[0,10],"371":[0,10],"372":[0,10],"373":[0,10],"374":[0,10],"375":[0,10],"376":[0,5],"377":[0,5],"378":[0,5],"379":[0,5],"380":[0,5],"381":[0,10],"382":[0,10],"383":[0,1,1,2,3,3,4,4,5,5,6,6,7,7,20,50,75,100,110,125,150],"385":[0,15],"386":[0,15],"387":[0,15],"388":[0,15],"389":[0,15],"390":[0,10],"391":[0,20],"392":[0,15],"393":[0,15],"394":[0,15],"395":[0,15],"396":[0,15],"397":[0,10],"398":[0,20],"399":[0,1,1,3,5,5,8,10,10,12,15],"400":[0,1,3,5],"401":[0,15],"402":[0,15],"403":[0,15],"404":[0,15],"405":[0,10],"406":[0,20],"407":[0,10],"408":[0,10],"409":[0,10],"410":[0,20],"411":[0,20],"412":[0,20],"413":[0,20],"414":[0,30],"415":[0,50],"416":[0,15],"417":[0,15],"418":[0,15],"419":[0,15],"420":[0,10],"421":[0,20],"422":[0,10],"423":[0,10],"424":[0,1,1,2,3,3,4,5,10,15,15,15,30,30,30,30,30,30,30,50,55,60,60,60,70,70,200],"425":[0,1,1,1,2],"426":[0,1,1,1,1,2],"427":[0,1,1,1,1,2],"428":[0,1,1,1,1,2],"429":[0,1,1,1,1,2],"430":[0,1,1,1,2,2,3],"431":[0,1,1,2,2,3,5],"432":[0,1],"433":[0,1],"434":[0,1],"435":[0,1],"436":[0,1],"437":[0,2],"438":[0,2],"439":[0,3],"440":[0,3],"441":[0,5],"442":[0,1],"443":[0,1],"444":[0,1],"445":[0,1],"446":[0,1],"447":[0,2],"448":[0,2],"449":[0,3],"450":[0,3],"451":[0,5],"452":[0,1],"453":[0,4],"454":[0,4],"455":[0,10],"456":[0,10],"457":[0,10],"458":[0,10],"459":[0,10],"460":[0,1,2,3,5,10],"461":[0,1,2,3,5,10],"462":[0,1,2,3,5,10],"463":[0,1],"464":[0,1],"465":[0,2],"466":[0,3],"467":[0,5],"468":[0,10],"469":[0,10,15,25,50],"470":[0,1,3,6,12],"471":[0,5],"472":[0,5],"473":[0,5],"474":[0,5],"475":[0,10],"476":[0,15],"477":[0,40],"478":[0,20],"479":[0,10],"480":[0,10],"481":[0,10],"482":[0,10],"483":[0,1],"484":[0,4],"485":[0,4],"486":[0,10],"487":[0,10],"488":[0,10],"489":[0,10],"490":[0,10],"491":[0,5,5,5,5,10,10,15,20,25],"492":[0,15],"493":[0,15],"494":[0,20],"495":[0,10],"496":[0,15],"497":[0,15],"498":[0,15],"499":[0,15],"500":[0,2,3,5,10,15],"501":[0,1,3,8,10,15],"502":[0,1,3,8,10,15],"503":[0,5],"504":[0,5],"505":[0,5],"506":[0,1],"507":[0,4],"508":[0,20],"509":[0,10],"510":[0,10],"511":[0,10],"512":[0,10],"513":[0,10],"514":[0,1,3,6,12],"515":[0,5],"516":[0,5],"517":[0,5],"518":[0,1,1,1,2,3],"519":[0,1],"520":[0,1],"521":[0,1],"522":[0,1],"523":[0,1],"524":[0,1],"525":[0,1],"526":[0,1],"527":[0,1],"528":[0,1],"529":[0,1],"530":[0,1],"531":[0,1],"532":[0,1],"533":[0,1],"534":[0,1],"535":[0,1],"536":[0,1],"537":[0,1],"538":[0,1],"539":[0,1],"540":[0,1],"541":[0,1],"542":[0,1],"543":[0,1],"544":[0,1],"545":[0,1],"546":[0,1],"547":[0,1],"548":[0,1],"549":[0,1],"550":[0,1],"551":[0,1],"552":[0,1],"553":[0,1],"554":[0,1],"555":[0,1],"556":[0,1],"557":[0,1],"558":[0,1],"559":[0,1],"560":[0,1],"561":[0,1],"562":[0,1],"563":[0,1],"564":[0,1],"565":[0,1],"566":[0,1],"567":[0,1],"568":[0,1],"569":[0,1],"570":[0,1],"571":[0,1,3,5,10,15],"572":[0,1,2,3,4,5],"573":[0,10,15,20,25],"574":[0,1,3,5],"575":[0,1,3,5],"576":[0,1,3,5],"577":[0,1,3,5],"578":[0,1,3,5],"579":[0,1,3,5],"580":[0,5,10,15],"581":[0,5,10,15],"582":[0,5,10,15],"583":[0,5,10,15],"584":[0,5,10,15],"585":[0,5,10,15],"586":[0,1,1,1,1,1,1,1,1],"587":[0,1,3,5],"588":[0,5,10,15],"589":[0,1,3,5],"590":[0,5,10,15],"591":[0,1,3,5],"592":[0,5,10,15],"593":[0,1,3,5],"594":[0,5,10,15],"595":[0,20],"596":[0,25],"597":[0,1],"598":[0,4],"599":[0,4],"600":[0,10],"601":[0,10],"602":[0,10],"603":[0,10],"604":[0,10],"605":[0,10],"606":[0,10],"607":[0,10],"608":[0,10],"609":[0,1,3,5,10,15],"610":[0,1,5,10,15,20],"611":[0,1,2,3,5,10],"612":[0,1,2,3,5,10,15],"613":[0,1,3,5,10,15,20,25],"614":[0,1,2,5,10,15,20],"615":[0,1,3,5],"616":[0,5,10,15,20],"617":[0,1,3,5],"618":[0,5,10,15,20],"619":[0,1,3,5],"620":[0,5,10,15,20],"621":[0,1,3,5],"622":[0,5,10,15,20],"623":[0,1,3,5],"624":[0,5,10,15,20],"625":[0,1,3,5],"626":[0,5,10,15,20],"627":[0,5],"628":[0,20],"629":[0,25],"630":[0,10],"631":[0,10],"632":[0,10],"633":[0,10],"634":[0,10],"635":[0,10],"636":[0,10],"637":[0,10],"638":[0,10],"639":[0,1,1,1,2,3,4,5],"640":[0,1,3,8,10,15],"641":[0,1,3,8,10,15],"642":[0,5],"643":[0,5],"644":[0,5],"645":[0,15],"646":[0,15],"647":[0,20],"648":[0,20],"649":[0,15],"650":[0,15],"651":[0,15],"652":[0,15],"653":[0,15],"654":[0,15],"655":[0,15],"656":[0,15],"657":[0,1,1,5,5,5,5,10,15,20],"658":[0,1,5,5,5,15,15,15,20,30],"659":[0,1,2,2,2,5,5,10,10,15],"660":[0,1,5,5,15,30],"661":[0,1,5,5,5,15,15,15,20,30],"662":[0,1,5,5,15,30],"663":[0,1,5,5,5,15,15,15,20,30],"664":[0,1,5,5,15,30],"665":[0,15],"666":[0,15],"667":[0,20],"668":[0,20],"669":[0,15],"670":[0,15],"671":[0,15],"672":[0,15],"673":[0,15],"674":[0,15],"675":[0,15],"676":[0,15],"677":[0,1,2,3,5,10,15,30],"678":[0,1,3,5],"679":[0,5,10,15],"680":[0,1,3,5,7],"681":[0,5,10,15,25],"682":[0,1,3,5,7],"683":[0,5,10,15,25],"684":[0,1,3,5,7],"685":[0,5,10,15,25],"686":[0,1,3,5,7],"687":[0,5,10,15,25],"688":[0,1,3,5,5],"689":[0,5,10,15,25],"690":[0,1,3,5,7],"691":[0,5,10,15,25],"692":[0,30,30],"693":[0,30,30],"694":[0,30,35],"695":[0,30,30,30],"696":[0,30,35],"697":[0,30,30,30],"698":[0,30,35],"699":[0,1,3,6,12],"700":[0,5],"701":[0,5],"702":[0,5],"703":[0,20],"704":[0,100],"705":[0,70],"706":[0,50],"707":[0,20],"708":[0,20],"709":[0,20],"710":[0,20],"711":[0,20],"712":[0,20],"713":[0,20],"714":[0,30],"715":[0,15],"716":[0,15],"717":[0,20],"718":[0,20],"719":[0,15],"720":[0,15],"721":[0,15],"722":[0,15],"723":[0,15],"724":[0,15],"725":[0,15],"726":[0,15],"727":[0,1,3,8,10,15],"728":[0,1,3,8,10,15],"729":[0,5],"730":[0,5],"731":[0,5],"732":[0,1,2,3,5,10,15,30],"733":[0,1,3,5],"734":[0,5,10,15],"735":[0,1,3,5],"736":[0,5,10,15],"737":[0,1,3,5],"738":[0,5,10,15],"739":[0,1,3,5],"740":[0,5,10,15],"741":[0,1,3,5],"742":[0,5,10,15],"743":[0,1,3,5],"744":[0,5,10,15],"745":[0,1,3,5,10,13,15],"746":[0,1,3,5,10,13,15],"747":[0,1,3,5,10],"748":[0,5,10,15,20],"749":[0,15],"750":[0,15],"751":[0,20],"752":[0,15],"753":[0,15],"754":[0,15],"755":[0,15],"756":[0,15],"757":[0,15],"758":[0,15],"759":[0,15],"760":[0,15],"761":[0,15],"762":[0,15],"763":[0,20],"764":[0,20],"765":[0,15],"766":[0,15],"767":[0,15],"768":[0,15],"769":[0,15],"770":[0,15],"771":[0,15],"772":[0,15],"773":[0,15],"774":[0,15],"775":[0,20],"776":[0,15],"777":[0,15],"778":[0,15],"779":[0,15],"780":[0,15],"781":[0,15],"782":[0,15],"783":[0,15],"784":[0,15],"785":[0,15],"786":[0,15],"787":[0,20],"788":[0,15],"789":[0,15],"790":[0,15],"791":[0,15],"792":[0,15],"793":[0,15],"794":[0,15],"795":[0,15],"796":[0,15],"797":[0,1,1,1,2,3,4,5],"798":[0,1,2,3,5,10,15,30],"799":[0,1,3,5],"800":[0,5,10,15],"801":[0,1,3,5],"802":[0,5,10,15],"803":[0,1,3,5],"804":[0,5,10,15],"805":[0,1,3,5],"806":[0,5,10,15],"807":[0,1],"808":[0,2],"809":[0,3],"810":[0,5],"811":[0,1,3,5],"812":[0,5,10,15],"813":[0,1,3,5],"814":[0,5,10,15],"815":[0,1,3,5],"816":[0,5,10,15],"817":[0,1,3,5],"818":[0,5,10,15],"819":[0,1,3,5],"820":[0,5,10,15],"821":[0,1,3,5],"822":[0,5,10,15],"823":[0,1,3,5],"824":[0,5,10,15],"825":[0,1,3,5],"826":[0,5,10,15],"827":[0,15],"828":[0,15],"829":[0,20],"830":[0,20],"831":[0,15],"832":[0,15],"833":[0,15],"834":[0,15],"835":[0,15],"836":[0,15],"837":[0,15],"838":[0,15],"839":[0,1,3,6,12],"840":[0,5],"841":[0,5],"842":[0,5],"843":[0,1,2,3,5,10,15,20,25,30,35,40,45,50],"844":[0,1],"845":[0,1],"846":[0,1],"847":[0,1],"848":[0,1],"849":[0,1],"850":[0,1],"851":[0,1],"852":[0,1],"853":[0,1],"854":[0,1],"855":[0,1],"856":[0,1],"857":[0,1],"858":[0,1],"859":[0,1],"860":[0,1],"861":[0,1],"862":[0,1],"863":[0,1],"864":[0,1],"865":[0,1],"866":[0,1],"867":[0,1],"868":[0,1],"869":[0,1],"870":[0,1],"871":[0,1],"872":[0,1],"873":[0,1],"874":[0,1],"875":[0,1],"876":[0,1],"877":[0,1],"878":[0,1],"879":[0,1],"880":[0,1],"881":[0,1],"882":[0,1],"883":[0,1],"884":[0,1],"885":[0,1],"886":[0,1],"887":[0,1],"888":[0,1],"889":[0,1],"890":[0,1],"891":[0,1],"892":[0,1],"893":[0,1],"894":[0,1],"895":[0,1],"896":[0,1],"897":[0,1],"898":[0,1],"899":[0,1],"900":[0,1],"901":[0,1],"902":[0,1],"903":[0,1],"904":[0,1],"905":[0,1],"906":[0,1],"907":[0,1],"908":[0,1],"909":[0,1],"910":[0,1],"911":[0,1],"912":[0,1],"913":[0,1],"914":[0,1],"915":[0,1],"916":[0,1],"917":[0,1],"918":[0,1],"919":[0,15],"920":[0,15],"921":[0,20],"922":[0,20],"923":[0,15],"924":[0,15],"925":[0,15],"926":[0,15],"927":[0,15],"928":[0,15],"929":[0,15],"930":[0,15],"931":[0,10],"932":[0,1,3,6,12],"933":[0,5],"934":[0,5],"935":[0,5],"936":[0,15],"937":[0,15],"938":[0,20],"939":[0,20],"940":[0,15],"941":[0,15],"942":[0,15],"943":[0,15],"944":[0,15],"945":[0,15],"946":[0,15],"947":[0,15],"948":[0,15],"949":[0,15],"950":[0,20],"951":[0,20],"952":[0,15],"953":[0,15],"954":[0,15],"955":[0,15],"956":[0,15],"957":[0,15],"958":[0,15],"959":[0,15],"960":[0,1,2,3,5,10,15,30],"961":[0,1,2,5,10,20,50],"962":[0,1,5,10,20],"963":[0,1,2,5,10,20,50],"964":[0,1,5,10,20],"965":[0,15],"966":[0,15],"967":[0,20],"968":[0,15],"969":[0,15],"970":[0,15],"971":[0,15],"972":[0,15],"973":[0,15],"974":[0,15],"975":[0,15],"976":[0,15],"977":[0,1,2,3,4,5,10,15],"978":[0,1,2,3,5,7,9],"979":[0,15],"980":[0,15],"981":[0,20],"982":[0,15],"983":[0,15],"984":[0,15],"985":[0,15],"986":[0,15],"987":[0,15],"988":[0,15],"989":[0,15],"990":[0,15],"991":[0,15],"992":[0,15],"993":[0,20],"994":[0,15],"995":[0,15],"996":[0,15],"997":[0,15],"998":[0,15],"999":[0,15],"1000":[0,15],"1001":[0,15],"1002":[0,15],"1003":[0,3,5,10],"1004":[0,3,5,10],"1005":[0,3,5,10],"1006":[0,10,20,30],"1007":[0,10,20,30],"1008":[0,10,20,30],"1009":[0,10,20,30],"1010":[0,15],"1011":[0,15],"1012":[0,20],"1013":[0,15],"1014":[0,15],"1015":[0,15],"1016":[0,15],"1017":[0,15],"1018":[0,15],"1019":[0,15],"1020":[0,15],"1021":[0,15],"1022":[0,1,3,8,10,15],"1023":[0,1,3,8,10,15],"1024":[0,5],"1025":[0,5],"1026":[0,5],"1027":[0,10,15,20],"1028":[0,3,5],"1029":[0,1,3,5],"1030":[0,1,3,5],"1031":[0,1,3,5],"1032":[0,3,5,7],"1033":[0,3,5,7],"1034":[0,3,5,7],"1035":[0,5,7,10],"1036":[0,5,5,10],"1037":[0,5,7,10],"1038":[0,5,7,10],"1039":[0,15],"1040":[0,25],"1041":[0,25],"1042":[0,15],"1043":[0,15],"1044":[0,15],"1045":[0,15],"1046":[0,15],"1047":[0,15],"1048":[0,15],"1049":[0,15],"1050":[0,15],"1051":[0,1,1,1,2,3,5,10,15,20,25,30],"1052":[0,20],"1053":[0,20],"1054":[0,25],"1055":[0,20],"1056":[0,15],"1057":[0,15],"1058":[0,15],"1059":[0,15],"1060":[0,15],"1061":[0,15],"1062":[0,20],"1063":[0,20],"1064":[0,1,2,3,4,5,10,15],"1065":[0,10],"1066":[0,20],"1067":[0,40],"1068":[0,30],"1069":[0,20],"1070":[0,20],"1071":[0,20],"1072":[0,20],"1073":[0,20],"1074":[0,20],"1075":[0,25],"1076":[0,25],"1077":[0,1,2,5,7,10],"1078":[0,1,2,5,10,20,50],"1079":[0,1,5,10,20,40],"1080":[0,1,2,5,10,20,50],"1081":[0,1,3,5,10,15],"1082":[0,1,3,5,10,15],"1083":[0,5,7,9],"1084":[0,5,7,9],"1085":[0,5,7,9],"1086":[0,5,8,10],"1087":[0,5,8,10],"1088":[0,5,8,10],"1089":[0,6,9,12],"1090":[0,6,9,12],"1091":[0,6,9,12],"1092":[0,10,15,20],"1093":[0,15],"1094":[0,25],"1095":[0,45],"1096":[0,35],"1097":[0,25],"1098":[0,25],"1099":[0,25],"1100":[0,25],"1101":[0,25],"1102":[0,25],"1103":[0,30],"1104":[0,30],"1105":[0,40],"1106":[0,220],"1107":[0,150],"1108":[0,120],"1109":[0,40],"1110":[0,40],"1111":[0,40],"1112":[0,40],"1113":[0,40],"1114":[0,40],"1115":[0,40],"1116":[0,60],"1117":[0,70],"1118":[0,3,3,5,5,7,10],"1119":[0,3,3,5,7,10],"1120":[0,3,3,5,7,10],"1121":[0,3,3,5,7,10],"1122":[0,3,3,5,7,10],"1123":[0,5,5,10,15,20,25],"1124":[0,3,3,5,5,10],"1125":[0,5,5,10,15,20],"1126":[0,5,5,10,15,20],"1128":[0,5,5,10,15,20],"1129":[0,5,5,10,15,20],"1130":[0,1,2,3,5,10,15,30],"1131":[0,1,2,5,10,20,50],"1132":[0,1,2,5,10,20,50],"1133":[0,10,20,30,40,50,100],"1134":[0,20],"1135":[0,20],"1136":[0,25],"1137":[0,20],"1138":[0,15],"1139":[0,15],"1140":[0,15],"1141":[0,15],"1142":[0,15],"1143":[0,15],"1144":[0,20],"1145":[0,20],"1146":[0,25],"1147":[0,5,10,15,35,50],"1148":[0,5,10,15,20,30,50,100,150],"1149":[0,100],"1150":[0,20],"1151":[0,20],"1152":[0,45],"1153":[0,35],"1154":[0,25],"1155":[0,25],"1156":[0,25],"1157":[0,25],"1158":[0,25],"1159":[0,25],"1160":[0,30],"1161":[0,30],"1162":[0,30],"1163":[0,25,50,100,150],"1164":[0,15],"1165":[0,15],"1166":[0,40],"1167":[0,40],"1168":[0,20],"1169":[0,20],"1170":[0,20],"1171":[0,20],"1172":[0,20],"1173":[0,20],"1174":[0,25],"1175":[0,25],"1176":[0,25],"1177":[0,25],"1178":[0,20],"1179":[0,15],"1180":[0,15],"1181":[0,15],"1182":[0,15],"1183":[0,15],"1184":[0,15],"1185":[0,20],"1186":[0,20],"1187":[0,25],"1188":[0,20],"1189":[0,20],"1190":[0,25],"1191":[0,1,2,3,5,10,15,30],"1192":[0,1,2,5,10,20,50],"1193":[0,10,20,50,75,100,150],"1194":[0,10,20,30,40,50,100],"1195":[0,45],"1196":[0,35],"1197":[0,20],"1198":[0,20],"1199":[0,20],"1200":[0,20],"1201":[0,25],"1202":[0,25],"1203":[0,25],"1204":[0,30],"1205":[0,30],"1206":[0,15],"1207":[0,25],"1208":[0,5,10,15,35,50],"1209":[0,10],"1210":[0,10],"1211":[0,20],"1212":[0,10,15,20,25,30],"1213":[0,1,5,10,25,50],"1214":[0,5,10,15,20,25],"1215":[0,5,10,15,20,25],"1216":[0,5,10,15,20,25],"1217":[0,5,10,15,20,25],"1218":[0,5,10,15,20,25],"1219":[0,5,10,15,20,25],"1220":[0,5,10,15,20,25],"1221":[0,5,10,15,20,25],"1222":[0,5,10,15,20,25],"1223":[0,5,10,15,20,25],"1224":[0,5,10,15,20,25],"1225":[0,5,10,15,20,25],"1226":[0,5,10,15,20,25],"1227":[0,5,10,15,20,25],"1228":[0,5,10,15,20,25],"1229":[0,5,10,15,20,25],"1230":[0,5,10,15,20,25],"1231":[0,5,10,15,20,25],"1232":[0,5,7,10,13,15],"1233":[0,5,7,10,13,15],"1234":[0,5,7,10,13,15,20],"1235":[0,5,7,10,13,15,20],"1236":[0,45],"1237":[0,35],"1238":[0,20],"1239":[0,20],"1240":[0,20],"1241":[0,20],"1242":[0,25],"1243":[0,25],"1244":[0,25],"1245":[0,30],"1246":[0,30],"1247":[0,15],"1248":[0,25],"1249":[0,1,2,3,4,5,10,15],"1250":[0,5,7,9],"1251":[0,5,7,9],"1252":[0,5,7,9],"1253":[0,5,8,10],"1254":[0,5,8,10],"1256":[0,5,8,10],"1257":[0,5,8,10],"1258":[0,6,9,12],"1259":[0,6,9,12],"1260":[0,6,9,12],"1261":[0,5,7,9],"1262":[0,5,7,9],"1263":[0,5,7,9],"1264":[0,5,8,10],"1265":[0,5,8,10],"1266":[0,5,8,10],"1267":[0,6,9,12],"1268":[0,6,9,12],"1269":[0,6,9,12],"1270":[0,10,15,20],"1271":[0,1,3,5,10,15,25,50],"1272":[0,1,3,5,10,15,25,50],"1273":[0,1,3,5,10,15],"1274":[0,2,5,10,15,25,50,70],"1275":[0,2,5,10,15,25,50,70],"1276":[0,2,5,15,25],"1277":[0,3,5,7,10],"1278":[0,7,15,20,30],"1279":[0,1,3,5,10],"1280":[0,1,3,5,10],"1281":[0,5,10,15,25],"1282":[0,5,10,15,25],"1283":[0,1,3,5],"1284":[0,10,15,25],"1285":[0,5,10,15,20,25],"1286":[0,5,10,15,20,25],"1287":[0,5,10,15,20,25],"1288":[0,5,10,15,20,25],"1289":[0,5,10,15,20,25],"1290":[0,5,10,15,20,25],"1291":[0,5,10,15,20,25],"1292":[0,5,10,15,20,25],"1293":[0,5,10,15,20,25],"1294":[0,5,10,15,20,30,40,50],"1295":[0,5,10,15,20,30,40,50],"1296":[0,5,10,15,20,30,40,50],"1297":[0,45],"1298":[0,35],"1299":[0,10],"1300":[0,10],"1301":[0,15],"1302":[0,15],"1303":[0,20],"1304":[0,25],"1305":[0,25],"1306":[0,30],"1307":[0,30],"1308":[0,15],"1309":[0,25],"1310":[0,1,2,3,5,10,15,30,45],"1311":[0,1,2,3,5,10],"1312":[0,1,2,3,5,10],"1313":[0,1,2,3,5,10],"1314":[0,1,2,3,5,10],"1315":[0,1,2,3,5,10],"1316":[0,1,2,3,5,10],"1317":[0,1,2,3,5,10],"1318":[0,1,2,3,5,10],"1319":[0,1,2,3,5,10],"1320":[0,1,2,3,5,10],"1321":[0,1,2,3,5,10],"1322":[0,1,2,3,5,10],"1323":[0,1,2,3,5,10],"1324":[0,1,2,3,5,10],"1325":[0,1,2,3,5,10],"1326":[0,5,20,30],"1327":[0,5,20,30],"1328":[0,5,20,30],"1329":[0,5,20,30],"1330":[0,5,20,30],"1331":[0,5,20,30],"1332":[0,5,20,30],"1333":[0,5,20,30],"1334":[0,5,20,30],"1335":[0,5,10,20],"1337":[0,5,10,20],"1338":[0,5,10,20],"1339":[0,5,10,20],"1340":[0,5,10,20],"1341":[0,5,10,20],"1342":[0,5,10,20],"1343":[0,5,15,25,35,50],"1344":[0,1,3,8,10,15],"1345":[0,1,3,8,10,15],"1346":[0,5],"1347":[0,5],"1348":[0,5],"1349":[0,15],"1350":[0,20],"1351":[0,45],"1352":[0,35],"1353":[0,25],"1354":[0,10],"1355":[0,15],"1356":[0,15],"1357":[0,20],"1358":[0,25],"1359":[0,25],"1360":[0,30],"1361":[0,30],"1362":[0,15],"1363":[0,20],"1364":[0,45],"1365":[0,35],"1366":[0,10],"1367":[0,10],"1368":[0,15],"1369":[0,15],"1370":[0,20],"1371":[0,25],"1372":[0,25],"1373":[0,30],"1374":[0,30],"1375":[0,15],"1376":[0,20],"1377":[0,45],"1378":[0,35],"1379":[0,10],"1380":[0,10],"1381":[0,15],"1382":[0,15],"1383":[0,20],"1384":[0,25],"1385":[0,25],"1386":[0,30],"1387":[0,30],"1388":[0,100],"1389":[0,60],"1390":[0,400],"1391":[0,180],"1392":[0,140],"1393":[0,50],"1394":[0,50],"1395":[0,50],"1396":[0,50],"1397":[0,50],"1398":[0,50],"1399":[0,50],"1400":[0,70],"1401":[0,80],"1402":[0,25],"1403":[0,20],"1404":[0,15],"1405":[0,15],"1406":[0,15],"1407":[0,15],"1408":[0,15],"1409":[0,15],"1410":[0,20],"1411":[0,20],"1412":[0,25],"1413":[0,20],"1414":[0,20],"1415":[0,5,10,15,20,35,40,50],"1416":[0,5,10,15,20,35,40,50],"1417":[0,5,10,15,20,35,40,50],"1418":[0,5,10,15,20,35,40,50],"1419":[0,1,2,3,5,7,9,12,15,17,20],"1420":[0,1,2,3,5,7,9,12,15,17,20],"1421":[0,1,3,5,7,9,12,15,17],"1422":[0,45],"1423":[0,35],"1424":[0,20],"1425":[0,20],"1426":[0,20],"1427":[0,20],"1428":[0,25],"1429":[0,25],"1430":[0,25],"1431":[0,30],"1432":[0,30],"1433":[0,15],"1434":[0,25],"1435":[0,25],"1436":[0,20],"1437":[0,20],"1438":[0,20],"1439":[0,15],"1440":[0,15],"1441":[0,15],"1442":[0,15],"1443":[0,20],"1444":[0,20],"1445":[0,25],"1446":[0,20],"1447":[0,25],"1448":[0,1,2,3,4,5,10,15],"1449":[0,45],"1450":[0,40],"1451":[0,10],"1452":[0,10],"1453":[0,15],"1455":[0,20],"1456":[0,20],"1457":[0,25],"1458":[0,30],"1459":[0,30],"1460":[0,15],"1461":[0,25],"1462":[0,50],"1463":[0,40],"1464":[0,15],"1465":[0,15],"1466":[0,20],"1467":[0,20],"1468":[0,25],"1469":[0,30],"1470":[0,30],"1471":[0,35],"1472":[0,35],"1473":[0,45],"1474":[0,20],"1475":[0,25],"1476":[0,1,2,3,5,10,15],"1477":[0,5,10,15],"1478":[0,5,10,15],"1479":[0,5,10,15],"1480":[0,5,10,15],"1481":[0,5,10,15],"1482":[0,5,10,15],"1483":[0,5,10,15],"1484":[0,10,15,20],"1485":[0,10,20,30],"1486":[0,5,20,30],"1487":[0,5,20,30],"1488":[0,5,20,30],"1489":[0,5,20,30],"1490":[0,50],"1491":[0,40],"1492":[0,15],"1493":[0,15],"1494":[0,20],"1495":[0,20],"1496":[0,25],"1497":[0,30],"1498":[0,30],"1499":[0,35],"1500":[0,35],"1501":[0,45],"1502":[0,20],"1503":[0,25],"1504":[0,50],"1505":[0,40],"1506":[0,15],"1507":[0,15],"1508":[0,20],"1509":[0,20],"1510":[0,25],"1511":[0,30],"1512":[0,30],"1513":[0,35],"1514":[0,35],"1515":[0,45],"1516":[0,20],"1517":[0,25],"1518":[0,5,10,15,20,35,40,50],"1519":[0,70],"1520":[0,70],"1521":[0,30],"1522":[0,30],"1523":[0,30],"1524":[0,30],"1525":[0,30],"1526":[0,30],"1527":[0,30],"1528":[0,50],"1529":[0,60],"1530":[0,70],"1531":[0,60],"1532":[0,170],"1533":[0,5,5,10,20,30],"1534":[0,20],"1535":[0,40],"1536":[0,60],"1537":[0,5,10,15,25,50],"1538":[0,50],"1539":[0,40],"1540":[0,15],"1541":[0,15],"1542":[0,20],"1543":[0,20],"1544":[0,25],"1545":[0,30],"1546":[0,30],"1547":[0,35],"1548":[0,35],"1549":[0,45],"1550":[0,20],"1551":[0,50],"1552":[0,55],"1553":[0,45],"1554":[0,15],"1555":[0,20],"1556":[0,20],"1557":[0,25],"1558":[0,25],"1559":[0,30],"1560":[0,30],"1561":[0,35],"1562":[0,45],"1563":[0,50],"1564":[0,25],"1565":[0,50],"1566":[0,50],"1567":[0,40],"1568":[0,15],"1569":[0,15],"1570":[0,15],"1571":[0,15],"1572":[0,15],"1573":[0,15],"1574":[0,20],"1575":[0,20],"1576":[0,25],"1577":[0,35],"1578":[0,20],"1579":[0,20],"1580":[0,5,10,15,25],"1581":[0,30,50,70,90],"1582":[0,50],"1583":[0,60],"1584":[0,10],"1585":[0,10],"1586":[0,15],"1587":[0,15],"1588":[0,20],"1589":[0,20],"1590":[0,25],"1591":[0,25],"1592":[0,30],"1593":[0,35],"1594":[0,20],"1595":[0,50],"1596":[0,60],"1597":[0,70],"1598":[0,15],"1599":[0,15],"1600":[0,20],"1601":[0,20],"1602":[0,25],"1603":[0,25],"1604":[0,30],"1605":[0,30],"1606":[0,35],"1607":[0,40],"1608":[0,20],"1609":[0,60],"1610":[0,1,2,5,10,20,50],"1611":[0,1,2,5,10,20,50],"1612":[0,1,2,5,10,20,50],"1613":[0,1,2,5,10,20,50],"1614":[0,70],"1615":[0,20],"1616":[0,50],"1617":[0,40],"1618":[0,15],"1619":[0,15],"1620":[0,15],"1621":[0,15],"1622":[0,15],"1623":[0,15],"1624":[0,20],"1625":[0,20],"1626":[0,25],"1627":[0,35],"1628":[0,240],"1629":[0,60],"1630":[0,100],"1631":[0,90],"1632":[0,40],"1633":[0,40],"1634":[0,40],"1635":[0,40],"1636":[0,40],"1637":[0,40],"1638":[0,45],"1639":[0,60],"1640":[0,75],"1641":[0,90],"1642":[0,90],"1643":[0,30],"1644":[0,60],"1645":[0,50],"1646":[0,20],"1647":[0,20],"1648":[0,20],"1649":[0,20],"1650":[0,20],"1651":[0,20],"1652":[0,25],"1653":[0,30],"1654":[0,35],"1655":[0,40],"1656":[0,10],"1657":[0,25],"1658":[0,50],"1659":[0,1,3,5,10],"1660":[0,5,10,20,25,30,50],"1661":[0,1,2,3,4,5,10,15,20,30,50,75,100],"1662":[0,1,2,3,4,5,10,15,20,30,50,75,100],"1663":[0,1,2,4,8,15],"1664":[0,3,5,20,50],"1665":[0,1,2,3,4,5,10],"1666":[0,1,2,3,4,5,10],"1667":[0,1,2,3,4,5,10]},
+	
+	item_coolness=[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,1,1,3,3,3,3,1,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,25,10,10,25,25,25,10,25,10,25,10,10,10,10,10,10,10,10,10,10,10,10,10,50,50,50,100,100,500,100,100,200,200,200,1e3],
+	tdamage=[0,30,63,99,138,180,225,273,324,378,435,495,558,624,693,765,840,918,999,1083,1170,1260,1353,1449,1548,1650,1755,1863,1974,2088,2205,2325,2448,2574,2703,2835,2970,3108,3249,3393,3540,3690,3843,3999,4158,4320,4485,4653,4824,4998,5175,5355,5538,5724,5913,6105,6300,6498,6699,6903,7110,7320,7533,7749,7968,8190,8415,8643,8874,9108,9345,9585,9828,10074,10323,10575,10830,11088,11349,11613,11880,12150,12423,12699,12978,13260,13545,13833,14124,14418,14715,15015,15318,15624,15933,16245,16560,16878,17199,17523,17850,18180,18513,18849,19188,19530,19875,20223,20574,20928,21285,21645,22008,22374,22743,23115,23490,23868,24249,24633,25020,25410,25803,26199,26598,27000,27405,27813,28224,28638,29055,29475,29898,30324,30753,31185,31620,32058,32499,32943,33390,33840,34293,34749,35208,35670,36135,36603,37074,37548,38025,38505,38988,39474,39963,40455,40950,41448,41949,42453,42960,43470,43983,44499,45018,45540,46065,46593,47124,47658,48195,48735,49278,49824,50373,50925,51480,52038,52599,53163,53730,54300,54873,55449,56028,56610,57195,57783,58374,58968,59565,60165,60768,61374,61983,62595,63210,63828,64449,65073,65700,66330,66963,67599,68238,68880,69525,70173,70824,71478,72135,72795,73458,74124,74793,75465,76140,76818,77499,78183,78870,79560,80253,80949,81648,82350,83055,83763,84474,85188,85905,86625,87348,88074,88803,89535,90270,91008,91749,92493,93240,93990,94743,95499,96258,97020,97785,98553,99324,100098,100875,101655,102438,103224,104013,104805,105600,106398,107199,108003,108810,109620,110433,111249,112068,112890,113715,114543,115374,116208,117045,117885,118728,119574,120423,121275,122130,122988,123849,124713,125580,126450,127323,128199,129078,129960,130845,131733,132624,133518,134415,135315,136218,137124,138033,138945,139860,140778,141699,142623,143550,144480,145413,146349,147288,148230,149175,150123,151074,152028,152985,153945,154908,155874,156843,157815,158790,159768,160749,161733,162720,163710,164703,165699,166698,167700,168705,169713,170724,171738,172755,173775,174798,175824,176853,177885,178920,179958,180999,182043,183090,184140,185193,186249,187308,188370,189435,190503,191574,192648,193725,194805,195888,196974,198063,199155,200250,201348,202449,203553,204660,205770,206883,207999,209118,210240,211365,212493,213624,214758,215895,217035,218178,219324,220473,221625,222780,223938,225099,226263,227430,228600,229773,230949,232128,233310,234495,235683,236874,238068,239265,240465,241668,242874,244083,245295,246510,247728,248949,250173,251400,252630,253863,255099,256338,257580,258825,260073,261324,262578,263835,265095,266358,267624,268893,270165,271440,272718,273999,275283,276570,277860,279153,280449,281748,283050,284355,285663,286974,288288,289605,290925,292248,293574,294903,296235,297570,298908,300249,301593,302940,304290,305643,306999,308358,309720,311085,312453,313824,315198,316575,317955,319338,320724,322113,323505,324900,326298,327699,329103,330510,331920,333333,334749,336168,337590,339105,340635,342180,343741,345318,346910,348518,350142,351783,353440,355114,356804,358511,360235,361976,363735,365511,367305,369117,370947,372796,374663,376549,378454,380378,382321,384283,386265,388267,390289,392331,394393,396476,398580,400705,402851,405019,407208,409419,411652,413908,416186,418487,420811,423158,425529,427923,430341,432784,435251,437743,440260,442802,445369,447962,450581,453226,455897,458595,461320,464072,466852,469660,472496,475360,478253,481175,484126,487106,490116,493156,496227,499328,502460,505624,508819,512046,515306,518598,521923,525281,528673,532099,535559,539054,542584,546149,549750,553387,557060,560770,564517,568301,572123,575983,579882,583820,587797,591814,595871,599969,604108,608288,612510,616774,621081,625431,629824,634261,638743,643270,647842,652459,657123,661833,666590,671395,676248,681150,686101,691101,696151,701252,706404,711607,716862,722170,727531,732945,738414,743937,749515,755149,760840,766587,772392,778255,784177,790158,796199,802300,808462,814686,820972,827321,833733,840209,846750,853357,860030,866769,873576,880451,887395,894408,901491,908645,915871,923169,930540,937984,945503,953097,960767,968514,976338,984240,992221,1000282,1008424,1016647,1024953,1033342,1041814,1050371,1059014,1067743,1076559,1085464,1094458,1103542,1112716,1121982,1131341,1140793,1150340,1159982,1169721,1179557,1189492,1199526,1209660,1219896,1230234,1240675,1251221,1261872,1272630,1283495,1294469,1305553,1316748,1328055,1339475,1351009,1362658,1374424,1386307,1398309,1410431,1422674,1435040,1447529,1460143,1472884,1485752,1498749,1511876,1525134,1538524,1552048,1565708,1579504,1593438,1607511,1621725,1636081,1650581,1665226,1680017,1694956,1710045,1725285,1740677,1756223,1771924,1787782,1803799,1819976,1836315,1852817,1869484,1886318,1903320,1920492,1937836,1955353,1973046,1990916,2008964,2027193,2045604,2064199,2082980,2101949,2121108,2140458,2160002,2179741,2199677,2219813,2240150,2260691,2281437,2302390,2323553,2344928,2366516,2388320,2410342,2432584,2455049,2477739,2500655,2523801,2547178,2570789,2594636,2618721,2643047,2667617,2692432,2717495,2742809,2768376,2794199,2820280,2846622,2873227,2900098,2927238,2954649,2982335,3010297,3038539,3067063,3095873,3124971,3154360,3184043,3214023,3244302,3274884,3305772,3336969,3368478,3400302,3432444,3464908,3497696,3530812,3564259,7164161,10800061,14472321,18181303,21927375,25710908,29532276,33391858,37290035,41227195,45203726,49220022,53276481,57373505,61511499,65690873,69912041,74175420,78481433,82830506,87223071,91659560,96140415,100666078,105236998,109853627,114516422,119225845,123982363,128786445,133638569,138539213,143488865,148488012,153537151,158636782,163787409,168989542,174243696,179550392,184910155,190323516,195791010,201313179,206890570,212523734,218213231,223959622,229763477,235625371,241545884,247525602,253565117,259665027,265825936,272048454,278333198,284680789,291091856,297567033,304106963,310712291,317383673,324121769,330927246,337800777,344743044,351754733,358836540,365989164,373213315,380509707,387879063,395322113,402839593,410432248,418100829,425846096,433668816,441569763,449549720,457609476,465749830,473971587,482275562,490662577,499133462,507689055,516330205,525057766,533872603,542775588,551767602,560849537,570022292,579286774,588643900,598094598,607639803,617280461,627017524,636851958,646784737,656816843,666949271,677183022,687519112,697958562,708502406,719151689,729907465,740985915,752396718,764149845,776255566,788724459,801567418,814795666,828420762,842454610,856909474,871797984,887133149,902928369,919197446,935954595,953214458,970992117,989303106,1008163425,1027589553,1047598465,1068207644,1089435099,1111299377,1133819584,1157015397,1180907084,1205515522,1230862213,1256969305,1283859609,1311556623,1340084547,1369468309,1399733583,1430906816,1463015246,1496086929,1530150762,1565236510,1601374830,1638597300,1676936444,1716425762,1757099760,1798993978,1842145022,1886590598,1932369541,1979521852,2028088733,2078112620,2129637223,2182707565,2237370017,2293672342,2351663737,2411394874,2472917945,2536286708,2601556534,2668784455,2738029213,2809351314,2882813078,2958478695,3036414281,3116687934,3199369797,3284532116,3372249304,3462598008,3555657173,3651508113,3750234581,3851922843,3956661753,4064542830,4175660339,4290111374,4407995940,4529417043,4654480779,4783296427,4915976544,5052637065,5193397401,5338380547,5487713188,5641525808,5799952807,5963132615,6131207818,6304325277,6482636259,6666296571,6855466692,7050311917,7251002499,7457713798,7670626436,7889926453,8115805471,8348460859,8588095909,8834920010,9089148834,9351004523,9620715883,9898518583,10184655364],
+	sExp=[0,0,10,25,40,60,90,125,170,225,300,375,470,585,715,865,1e3,1230,1440,1680,2e3,2250,2570,2900,3300,3740,4200,4700,5200,5800,6400,7e3,7750,8500,9300,10100,11e3,11900,12900,13950,15e3,16200,17400,18700,2e4,21400,22900,24400,26e3,27600,29500,31500,33e3,35e3,37e3,4e4,41250,43500,45800,48250,51e3,53300,56e3,58750,61600,65e3,67500,7e4,74e3,77200,80600,84e3,88e3,91500,95e3,1e5,103e3,107350,111500,115950,120500,125e3,13e4,134500,139500,144500,149660,155e3,16e4,166e3,171500,177500,183300,189500,195500,202e3,208e3,215e3,221500,228500,235500,25e4],ach_cmb=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],boss_aid=[52,64,65,66,67,68,69,70,71,72,414,246,248,289,354,368,381,382,414,408,423,453,476,484,493,507,598,628,646,666,704,716,750,762,774,786,828,920,937,949,966,67,980,992,1011,1040,1053,1066,1094,1106,1135,1151,1165,1189,1207,1248,1309,1350,1363,1376,1414,1447,1503,1390,1434,1461,1475,1517,1532,1551,1565,1579,1595,1609],
+	chestt=["0+","1+","5+","10+","50+","100+"],
+	chestl=["0+","2+","5+","10+","50+","100+","150+","210+","300+","400+","555+"],
+	
+	ach_owns=["даже мухи не обидел","Кирпич","Сизый","Махно","Лютый","Палыч","Циклоп","Шайба","Бес","Паленый","Борзов","Хирург!","Дюбель!!!","Бугор о_O"],
+	ach_maxcraft=["0+","100+","200+","400+","800+","1600+","3200+","6400+","7200+","9000+","11000+","15000+","18000+"];
+	if("false"!=GM_getValue("am_vk_PLUS",1)){
+	var ach_vals=['Нет 10к','10к+','30к+','50к+','100к+','500к+','1кк+','2кк+','3кк+','4кк+','5кк+','10кк+','15кк+','20кк+','25кк+','30кк+','40кк+','80кк+','150кк+','300кк+','500кк+','750кк+','1ккк+','2ккк+','3.5ккк+','5ккк+','6ккк+','8ккк+','10ккк+','13ккк+','15ккк+','20ккк+','30ккк+','50ккк+','70ккк+','100ккк+','150ккк+','200ккк+'],
+	ach_poison=[" нет 100"," 100+"," 200+"," 500+"," 1к+"," 10к+"," 50к+"," 100к+"," 200к+"," 300к+"," 400к+"," 500к+"],
+	ach_samopal=['<img src="/images/blank.gif" emoji="D83DDE22" false="" class="emoji_css" style="background-position: 0px -187px;"> </img> мало',"360+","720+","1.8к+","3.6к+","36к+","180к+","360к+","720к+","1кк+","1.5кк+","1.8кк+"],
+	ach_mskweap = ['< 5к','5к+','10к+','50к+','100к+','250к+','500к+','1кк+'],
+	ach_rub=["нет 8","8+","18+","50+","100+","500+","1к+","5к+","10к+","25к+","50к+","100к+","150к+"," 300к+"," 500к+"," 750к+"," 1кк+"," 2.5кк+"," 5кк+"," 7.5кк+"," 10кк+"];
+	}else{	
+	var ach_vals = ['Нет 10.000','10.000+','30.000+','50.000+','100.000+','500.000+','1.000.000+','2.000.000+','3.000.000+','4.000.000+','5.000.000+','10.000.000+','15.000.000+','20.000.000+','25.000.000+','30.000.000+','40.000.000+','80.000.000+','150.000.000+','300.000.000+','500.000.000+','750.000.000+','1.000.000.000+','2.000.000.000+','3.5.000.000.000+','5.000.000.000+','6.000.000.000+','8.000.000.000+','10.000.000.000+','13.000.000.000+','15.000.000.000+','20.000.000.000+','30.000.000.000+','50.000.000.000+','70.000.000.000+','100.000.000.000+','150.000.000.000+','200.000.000.000+'],
+   	ach_mskweap = ['< 5.000','5.000+','10.000+','50.000+','100.000+','250.000+','500.000+','1.000.000+'],
+   	ach_poison = ['<span style="color:#FF0000;font-size:10px;background:#fff"> без</span> 100 яда ', '100+', '200+    ', '500+    ', '1.000+   ', '10.000+   ', '50.000+   ', '100.000+   ', '200.000+   ', '300.000+   ', '400.000+   ', '500.000+   '],
+    ach_samopal = ['<img src="/images/blank.gif" emoji="D83DDE22" false="" class="emoji_css" style="background-position: 0px -187px;"> </img> мало', '360+', '720+', '1.800+', '3.600+', '36.000+', '180.000+', '360.000+', '720.000+', '1.000.000+', '1.500.000+', '1.800.000+'],
+   	ach_rub = ['без 8 рублей?!', '8+ ', '18+ ', '50+', '100', '500+', '1.000+', '5.000+', '10.000+', '25.000+', '50.000+', '100.000+', '150.000+', '300.000+', "500.000+", "750.000+", "1.000.000+", "2.500.000+", "5.000.000+", "7.500.000+", "10.000.000+"],
+    ach_pape = ['меньше 4', '4+ ', '60+', '120+', '300+', '500+', '1.000+', '3.000+', '5.000+', '10.000+', '30.000+', '50.000+'],
+    ach_sahar = ['Меньше 200', '200+', '2.750+', '5.000+', '10.000+', '50.000+', '100.000+', '500.000+', '1.000.000+', '5.000.000+', '10.000.000+'],
+    ach_sigs = ['Меньше 10.000', '10.000+', '50.000+', '100.000+', '300.000+', '500.000+', '1.000.000+', '5.000.000+', '10.000.000'],
+    ach_milo = ['Меньше 2', '2+', '50+', '100+', '500+', '1.000+', '5.000+', '10.000+', '20.000+'];
+	}
+	
+	var crKey=new Array,
+	bread_v=[0,7,14,30,60],ach_cmbids=[311,312,313,314,315,316,317,318,319,329,330,331,332,333,334,338,339,340],
+	crafted_names=["Инструмент","Бомба","Освежитель","Брелок","Дракон","Вентилятор","Праща","Суровый нож","Кастет","Кнут","Коктейль Молотова","Бенгальский коктейль","Зажигательная бомба","Раскладной нож","Арбалет","Суровый кастет","Гравицапа","Вспышка","Чернуха","Братан","Самострел","Посох","Рогатка","Ножик","Ствол","Семафор","Правильная прищепка","Минибар","Шайтан","Подкидыш","Робин Гуд","Вонючая фреза","Ящик Пандоры","Анархист"],
+	uach=new Object;uach.totalPoint=0;
+
+	for(;achievment;){
+		if(a_lvl=parseInt(achievment.textContent),a_id=parseInt(achievment.getAttribute("id")),uach[a_id]=a_lvl,!achieves[a_id]){
+			aupd=' <a href="/public117313585" style="color:#FF0000;">новые достижения!</a>';
+			break
+		}
+		for(i=0;i<=a_lvl;i++)
+			uach.totalPoint+=achieves[a_id][i]||0;
+		ach_cmbids.indexOf(a_id)>=0&&(a_id<=313&&(ach_cmb[1][a_id-311]=a_lvl),
+			a_id>313&&a_id<317&&(ach_cmb[2][a_id-314]=a_lvl),
+			a_id>316&&a_id<320&&(ach_cmb[3][a_id-317]=a_lvl)),
+		achievment=playerAchievments.iterateNext()
+	}
+		
+	if(fuid==user){
+		crExp=parseInt(xmlDoc.evaluate("//crExp",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent),
+		crLvl=parseInt(chLvl(crExp)),
+		crKeys=xmlDoc.evaluate("//key",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null);
+		var crKeyx=crKeys.iterateNext()
+	}
+	for(;crKeyx;)
+		crKey[crKeyx.getAttribute("id")]=crKeyx.textContent,
+	crKeyx=crKeys.iterateNext();
+	for(var combo_id,combo_cnt,crafted=0,scrafted="",playerCombos=xmlDoc.evaluate("//combo",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),comboidArr=new Array,combo=playerCombos.iterateNext(),i=4;i<61;i++)
+		i>=13&&i<=21||i>=28&&i<=30||i>=136&&i<=139?"":comboidArr[i]=i;
+	for(var i=4;i<61;i++)
+		comboidArr.indexOf(i)>=0&&(ccn[i]=0);
+
+    for(;combo;)
+    	ccn[parseInt(combo.getAttribute("id"))]=parseInt(combo.textContent),combo=playerCombos.iterateNext();
+
+    poison='<span style="color:#'+ach_stls3[uach[2]]+';font-size:10px;">'+ach_poison[uach[2]]+" яда, </span>",
+    poison2='<span style="color:#'+ach_stls3[uach[1051]]+';font-size:10px;">'+ach_samopal[uach[1051]]+" самопалов</span>",
+    rubles='<span style="color:#'+ach_stls4[uach[42]]+';font-size:10px;">'+ach_rub[uach[42]]+" рублей, </span>";
+    for(var id_craft=[250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,931],i=0;i<id_craft.length;i++)
+    	parseInt(uach[id_craft[i]])>0&&(scrafted+=crafted_names[i]+"</br>",crafted++);
+    html+=printRow("Борода",breadName+' / <span style="color:#20A020;font-size:10px;">'+bread_v[uach[45]]+"</span>");
+    var craftCool=0;
+    if(fuid==user)
+    	for(var slots=xmlDoc.evaluate("//slot",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),slot=slots.iterateNext();slot;)
+    		craftCool+=item_coolness[parseInt(slot.textContent)],slot=slots.iterateNext();
+    else 
+    	var craftCool=xmlDoc.evaluate("//craft_coolness",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+	html+=printRow("Крутизна шмота", craftCool+' / <span style="color:#20A020;font-size:10px;">'+ach_maxcraft[uach[283]]+'</span>&nbsp;<span class="am_tt" style="color:#A3B0BC;font-size:10px;padding:0 2px 0 6px;">'+(scrafted.length?'<span class="am_tip">'+scrafted+"</span>":"")+"предметов собрано "+crafted+" из "+crafted_names.length+"</span>"),
+	html+=printRow("Очки достижений",uach.totalPoint+" / "+suma(achieves)+aupd);
+	
+	if("false"!=GM_getValue("am_vk_PLUS",1)){
+	html+=printRow("Боевые достижения",'<b  style="color:#'+ach_stls[uach[1]]+';font-size:10px;">'+ach_vals[uach[1]]+" урона,</b>"+poison+rubles+poison2),
+	"false"!=GM_getValue("am_vk_ch_currency",1)&&(html+=printRow("Валюта",printCurrency(uach[49],uach[47],uach[48],uach[40])));
+	}else{
+		if(fuid==user){
+    	currubles=xmlDoc.evaluate("//diamond",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+    	var myrub='<span class="am_tip" style="width:180px;font-size:10px;"><b>Сейчас '+currubles+" рублей</b></span>";
+    	html+=printRow("Максимально рублей:",'<div class="am_tt"><b style="color:#'+ach_stls4[uach[42]]+';font-size:10px;background:#fff">'+myrub+ach_rub[uach[42]]+"</b></div>")
+    }
+    else html+=printRow("Максимально рублей:",'<div class="am_tt"><b style="color:#'+ach_stls4[uach[42]]+';font-size:10px;background:#fff">'+ach_rub[uach[42]]+"</b></div>");
+
+    html += printRow('Максимальный урон', '<b  style="color:#' + ach_stls[uach[1]] + ';font-size:10px;">' + ach_vals[uach[1]] + '</b>');
+    html += printRow('Максимально яда', '<b  style="color:#' + ach_stls3[uach[2]] + ';font-size:10px;">' + ach_poison[uach[2]] + '</b>');
+    html += printRow('Максимально самопалов', '<b  style="color:#' + ach_stls3[uach[1051]] + ';font-size:10px;">' + ach_samopal[uach[1051]] + ' самопалов</b>');
+
+    fuid==user
+    ?html+=printRow("Посылки",printfRow(285,cValue("0","1+","5+","15+","30+","50+")[uach[285]])+" / "+printfRow(286,cValue("0","1+","5+","15+","30+","50+")[uach[286]])+" / "+printfRow(287,cValue("0","1+","5+","15+","30+","50+")[uach[287]]))
+    :html+=printRow("Посылки",printfRow(285,cValue("0","1+","5+","15+","30+","50+")[uach[285]])+" / "+printfRow(286,cValue("0","1+","5+","15+","30+","50+")[uach[286]])+" / "+printfRow(287,cValue("0","1+","5+","15+","30+","50+")[uach[287]]));
+
+    html += printRow('Максимально бумаги', '<b  style="color:#' + ach_stls[uach[47]] + ';font-size:10px;background:#fff">' + ach_pape[uach[47]] + '</b>');
+    html += printRow('Максимум сахара', '<b  style="color:#' + ach_stls[uach[48]] + ';font-size:10px;background:#fff">' + ach_sahar[uach[48]] + '</b>');
+    html += printRow('Максимум папирос', '<b  style="color:#' + ach_stls[uach[40]] + ';font-size:10px;background:#fff">' + ach_sigs[uach[40]] + '</b>');
+    html += printRow('Максимум мыла', '<b  style="color:#' + ach_stls3[uach[49]] + ';font-size:10px;background:#fff">' + ach_milo[uach[49]] + '</b>');
+
+	}
+
+	if(fuid==user){
+		var collected_spells=xmlDoc.evaluate("//collected_spells",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+		for(Aspell=xmlDoc.evaluate("//spell[@id]",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),Bspell=new Array,Dspell1=Aspell.iterateNext();Dspell1;)
+			Bspell[Dspell1.getAttribute("id")]=Dspell1.textContent,Dspell1=Aspell.iterateNext();
+		Bspell[4]='<b style="color:green">'+(Bspell[4]||0)+"</b> ",
+		Bspell[5]='<b style="color:green">'+(Bspell[5]||0)+"</b> ",
+		Bspell[6]='<b style="color:green">'+(Bspell[6]||0)+"</b> ";
+		for(var Aspell1=xmlDoc.evaluate("//spell[@id]",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),Bspell1=new Array,Dspell2=Aspell1.iterateNext();Dspell2;)
+			Bspell1[Dspell2.getAttribute("id")]=Dspell2.textContent,Dspell2=Aspell1.iterateNext();
+		Bspell1[4]=Bspell1[4]||0,Bspell1[5]=Bspell[5]||0,Bspell1[6]=Bspell1[6]||0,
+		FinkaB=Bspell1[4],PistolB=Bspell1[5],poisonB=Bspell1[6]}
+
+	
+
+		function ownRcd(){
+			for(var a=[,,,,,,,,,,,,,,,,,381,382,,408,423,,,493],b=0,c=0;c<a.length;c++)b=uach[a[c]]?c:b;return b
+		}
+		
+		mychest=fuid==user?xmlDoc.evaluate("//winsCount",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent
+		+'<span class="am_tt" style="color:#20A020;font-size:10px;padding:0 2px 0 6px;"><span class="am_tip" style="width:180px;">До следующего уровня '+parseInt(chExp(crLvl+1)-crExp)
+		+" опыта</span>Уровень "+crLvl+",&nbsp;перстней "+crKey[1]+", слитков "+xmlDoc.evaluate("//goldPieceCount",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent
+		+"</span>":chestt[uach[360]]+'<span style="color:#20A020;font-size:10px;padding:0 2px 0 6px;">Уровень '+chestl[uach[366]]+"</span>",
+
+		"false"!=GM_getValue("am_vk_ch_chests",1)&&(html+=printRow("Зарубы",mychest));
+		var r_id=ownRcd();
+        
+            var soloBoss='<font color="#000000">Никого не бил?! O_o</font>'; // отображаем если не кто не засолен
+            if(uach[3]==1)    {var soloBoss='<font color="#009600">Кирпич</font>';} // 1к
+     	    if(uach[3]==2)    {var soloBoss='<font color="#009600">Сизый</font>';} // 10к
+	        if(uach[3]==3)    {var soloBoss='<font color="#009600">Махно</font>';} // 50к
+          	if(uach[381]==1)  {var soloBoss='<font color="#009600">Жестянщики</font>';} // 50к
+	        if(uach[3]==4)    {var soloBoss='<font color="#009600">Лютый</font>';} // 100к
+	        if(uach[3]==5)    {var soloBoss='<font color="#009600">Палыч</font>';}// 100к
+	        if(uach[382]==1)  {var soloBoss='<font color="#009600">Отбой</font>';} // 150к
+	        if(uach[484]==1)  {var soloBoss='<font color="#009600">Гастролер</font>';} // 150к
+	        if(uach[3]==6)    {var soloBoss='<font color="#0000C5">Циклоп</font>';} // 300к
+	        if(uach[246]==1)  {var soloBoss='<font color="#0000C5">Раиса</font>';} // 300к
+	        if(uach[3]==7)    {var soloBoss='<font color="#0000C5">Шайба</font>';} // 500к
+	        if(uach[408]==1)  {var soloBoss='<font color="#0000C5">Боцман</font>';} // 500к
+	        if(uach[3]==8)    {var soloBoss='<font color="#0000C5">Бес</font>';} // 700к
+	        if(uach[423]==1)  {var soloBoss='<font color="#0000C5">Жульбаны</font>';} // 1кк
+	        if(uach[3]==9)    {var soloBoss='<font color="#E69600">Паленый</font>';} // 1.5кк
+	        if(uach[248]==1)  {var soloBoss='<font color="#E69600">Близнецы</font>';} // 2кк
+	        if(uach[289]==1)  {var soloBoss='<font color="#E69600">Бурят</font>';} // 2кк
+	        if(uach[750]==1)  {var soloBoss='<font color="#E69600">Шнифер</font>';} // 2кк
+	        if(uach[774]==1)  {var soloBoss='<font color="#E69600">Бивень</font>';} // 2кк
+	        if(uach[3]==10)   {var soloBoss='<font color="#E69600">Борзов</font>';} // 3кк
+	        if(uach[368]==1)  {var soloBoss='<font color="#E69600">Дядя Миша</font>';} // 3кк
+	        if(uach[493]==1)  {var soloBoss='<font color="#E69600">Ташкент</font>';} // 3кк
+	        if(uach[646]==1)  {var soloBoss='<font color="#E69600">Контрабас</font>';} // 3кк
+	        if(uach[992]==1)  {var soloBoss='<font color="#E69600">Чебот</font>';} // 3кк
+	        if(uach[920]==1)  {var soloBoss='<font color="#E69600">Крюгер</font>';} // 3.5кк
+	        if(uach[453]==1)  {var soloBoss='<font color="#E69600">Цербер</font>';} // 5кк
+	        if(uach[598]==1)  {var soloBoss='<font color="#E69600">Бандяк</font>';} // 5кк
+	        if(uach[1053]==1) {var soloBoss='<font color="#E69600">Бельмондо</font>';} // 5кк
+        	if(uach[980]==1)  {var soloBoss='<font color="#E69600">Ёхан</font>';} // 7кк
+        	if(uach[1011]==1) {var soloBoss='<font color="#E69600">Абу</font>';} // 8кк
+	        if(uach[1135]==1) {var soloBoss='<font color="#FF0000">Шмель</font>';} // 8кк
+        	if(uach[507]==1)  {var soloBoss='<font color="#FF0000">Конвой</font>';} // 10кк
+        	if(uach[666]==1)  {var soloBoss='<font color="#FF0000">Воркута</font>';} // 10кк
+        	if(uach[762]==1)  {var soloBoss='<font color="#FF0000">Гризли</font>';} // 10кк
+        	if(uach[628]==1)  {var soloBoss='<font color="#FF0000">Бульдозер</font>';} // 15кк
+        	if(uach[828]==1)  {var soloBoss='<font color="#FF0000">Феня</font>';} // 15кк
+        	if(uach[716]==1)  {var soloBoss='<font color="#FF0000">Север</font>';} // 20кк
+        	if(uach[786]==1)  {var soloBoss='<font color="#FF0000">Кусто</font>';} // 20кк
+        	if(uach[949]==1)  {var soloBoss='<font color="#FF0000">Мазай</font>';} // 25кк
+        	if(uach[3]==11)   {var soloBoss='<font color="#FF0000">Хирург</font>';} // 30кк
+        	if(uach[966]==1)  {var soloBoss='<font color="#FF0000">Фин</font>';} // 30кк
+        	if(uach[3]==12)   {var soloBoss='<font color="#FF0000">Дюбель</font>';} // 40кк
+	        if(uach[937]==1)  {var soloBoss='<font color="#FF0000">Карло</font>';} // 40кк
+	        if(uach[1040]==1) {var soloBoss='<font color="#FF0000">Дантист</font>';} // 50кк
+        	if(uach[1189]==1) {var soloBoss='<font color="#FF0000">Шизо</font>';} // 50кк
+        	if(uach[476]==1)  {var soloBoss='<font color="#FF0000">Пресс</font>';} // 70кк
+	        if(uach[1066]==1) {var soloBoss='<font color="#FF0000">Немой</font>';} // 100кк
+	        if(uach[1248]==1) {var soloBoss='<font color="#FF0000">Зубр</font>';} // 100кк
+			if(uach[1376]==1) {var soloBoss='<font color="#FF0000">Атас</font>';} // 100кк
+        	if(uach[1165]==1) {var soloBoss='<font color="#FF0000">Бидон</font>';} // 300кк
+			if(uach[1461]==1) {var soloBoss='<font color="#FF0000">Лукум</font>';} // 300кк
+        	if(uach[1094]==1) {var soloBoss='<font color="#FF0000">Чугун</font>';} // 400кк
+        	if(uach[1151]==1) {var soloBoss='<font color="#FF0000">Старшой</font>';} // 400кк
+        	if(uach[1207]==1) {var soloBoss='<font color="#FF0000">Кнут</font>';} // 500кк
+        	if(uach[1309]==1) {var soloBoss='<font color="#FF0000">Мельдоний</font>';} // 500кк
+			if(uach[1414]==1) {var soloBoss='<font color="#FF0000">Думский</font>';} // 500кк
+			if(uach[1350]==1) {var soloBoss='<font color="#FF0000">Борисыч</font>';} // 750кк
+			if(uach[1434]==1) {var soloBoss='<font color="#FF0000">Сыч</font>';} // 850кк
+			if(uach[1363]==1) {var soloBoss='<font color="#FF0000">Полтос</font>';} // 900кк
+			if(uach[1447]==1) {var soloBoss='<font color="#FF0000">Боров</font>';} // 900кк
+        	if(uach[3]==13)   {var soloBoss='<font color="#FF0000">Бугор</font>';} // 1ккк
+			if(uach[1517]==1) {var soloBoss='<font color="#FF0000">Торгаш</font>';} // 1ккк
+			if(uach[1503]==1) {var soloBoss='<font color="#FF0000">Славянин</font>';} // 1,5ккк
+			if(uach[1579]==1) {var soloBoss='<font color="#FF0000">Ламбер</font>';} // 1,5ккк
+			if(uach[1475]==1) {var soloBoss='<font color="#FF0000">Ява</font>';} // 1,6ккк
+			if(uach[1551]==1) {var soloBoss='<font color="#FF0000">Беня</font>';} // 1,8ккк
+			if(uach[1565]==1) {var soloBoss='<font color="#FF0000">Кощей</font>';} // 2,2ккк
+			if(uach[1595]==1) {var soloBoss='<font color="#FF0000">Кирпич (Засекречено)</font>';} // 3ккк
+			if(uach[704]==1)  {var soloBoss='<font color="#FF0000">Крест</font>';} // 5ккк
+			if(uach[1609]==1) {var soloBoss='<font color="#FF0000">Сизый (Засекречено)</font>';} // 5ккк
+			if(uach[1614]==1) {var soloBoss='<font color="#FF0000">Лютый (Засекречено)</font>';} // 8ккк
+        	if(uach[1106]==1) {var soloBoss='<font color="#FF0000">Змей</font>';} // 13ккк
+            if(uach[1642]==1) {var soloBoss='<font color="#FF0000">Махно (Засекречено)</font>';} // 40ккк
+			if(uach[1532]==1) {var soloBoss='<font color="#FF0000">Гром</font>';} // 70ккк
+            if(uach[1628]==1) {var soloBoss='<font color="#FF0000">Эмигрант</font>';} // 120ккк
+			if(uach[1390]==1) {var soloBoss='<font color="#FF0000">Тротил</font>';} // 200ккк
+			html+=printRow('<span class="am_tt">В одного','<span class="am_tt"><span style="font-size:12px;font-weight:bold;">'+soloBoss+'</span></span>');
+
+		var boss_id,bosses=xmlDoc.evaluate("//boss",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),
+		guild=xmlDoc.evaluate("//playerGuild",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext();
+		if(fuid==user){
+			bosses=xmlDoc.evaluate("//playerWin",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null);
+			for(var dspelln=xmlDoc.evaluate("//spell[@spell]",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),dspell=new Array,dspellx=dspelln.iterateNext();dspellx;)
+				dspell[dspellx.getAttribute("spell")]=dspellx.textContent,dspellx=dspelln.iterateNext();
+			dspell[3]='<b style="color:green">'+(dspell[3]||0)+"</b> / ",
+			dspell[4]='<b style="color:green">'+(dspell[4]||0)+"</b> / "
+		}
+		html += printRow('<b>Талантов:</b>', '<b style="color:#' + ach_stls4[uach[6] + 2] + ';">' + sumtalents + '</b></div>');
+    
+
+		var gMode,b_id,dAmount=0,dCount=0,
+		gWins=new Object,
+		boss=bosses.iterateNext(),
+		medal="",bkey="",
+		wr={
+			winCount:null,
+			bossId:null,
+			droppedKeys:null,
+			coolWinCount:null,
+			epicWinCount:null,
+			lastAttack:null
+		},aBoss=new Array,
+		cdTime={12:null,13:null,22:null};
+		userItems=[];
+
+		if(fuid!=user){
+    		for(;boss;)
+	    		b_id=parseInt(boss.getAttribute("id")),
+	    		aBoss[aBoss.length]={id:b_id,cnt:parseInt(boss.textContent),
+	    		real_id:b_id,inmode:""},
+	    		boss=bosses.iterateNext();
+		}else{
+			for(var xitems=xmlDoc.evaluate("/data/availableItems/id",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),xitem=xitems.iterateNext();xitem;)
+				userItems.push(xitem.textContent),xitem=xitems.iterateNext();
+			for(var sparam=new Array,nn=["//diamond","//toilet_paper","//soap","//money","//sugar","//milk","//newGiftsCount","//todayWinsCount","//energy","//energy_spent", '//newGiftsCount','//key[19]'],i=0;i<nn.length;i++)
+				7==i?sparam[i]=parseInt(xmlDoc.evaluate(nn[i]+"/simple",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent)
+				+" / "+parseInt(xmlDoc.evaluate(nn[i]+"/cool",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent)
+				+" / "+parseInt(xmlDoc.evaluate(nn[i]+"/epic",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent):sparam[i]=parseInt(xmlDoc.evaluate(nn[i],xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent);
+				guild&&(gMode=xmlDoc.evaluate("//guildModeBossWins",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().getElementsByTagName("boss"));
+			for(i in gMode)gMode[i].attributes?gWins[gMode[i].getAttribute("bossId")]=gMode[i].textContent:null;
+				    	for(;boss;){
+    		b_id=parseInt(boss.getElementsByTagName("bossId")[0].textContent),
+    		b_id in cdTime?cdTime[b_id]=parseInt(boss.getElementsByTagName("lastAttack")[0].textContent):null;
+    		for(name in wr)
+    			wr[name]=boss.getElementsByTagName(name);
+    		b_id in gWins?wr.guilded="&#10;Бригадных: "+gWins[b_id]:delete wr.guilded,aBoss[aBoss.length]={
+    			id:b_id,
+    			cnt:wr.winCount[0]?wr.winCount[0].textContent:0,
+    			real_id:wr.bossId[0]?wr.bossId[0].textContent:0,
+    			key:wr.droppedKeys[0]?wr.droppedKeys[0].textContent:0,
+    			inmode:"Блатных : "+(wr.coolWinCount[0]?wr.coolWinCount[0].textContent:0)
+    			+"<br/>Авторитетных : "+(wr.epicWinCount[0]?wr.epicWinCount[0].textContent:0)+(wr.guilded||"")
+    			+"&#10;Последняя атака : &#10;"+tsFormat(wr.lastAttack[0]?wr.lastAttack[0].textContent:0),ewc:wr.epicWinCount[0]?wr.epicWinCount[0].textContent:0,cwc:wr.coolWinCount[0]?wr.coolWinCount[0].textContent:0},
+    			boss=bosses.iterateNext()
+    		}
+    	}
+		 evBosses = xmlDoc.evaluate('/data/eventBosses/eventBoss', xmlDoc, nsResolver, XPathResult.ANY_TYPE, null);
+    evBoss = evBosses.iterateNext();
+    evba = [];
+	for(;evBoss;){
+		var evid=evBoss.getElementsByTagName("bossId"),
+		evts=evBoss.getElementsByTagName("finishTS"),
+		evrew=userItems.indexOf(evBoss.getElementsByTagName("reward")[0].textContent)>=0;
+		evid&&evba.push(bossNames[evid[0].textContent-1]+" с нами еще<br><small>"+sec2time(evts[0].textContent-(+new Date/1e3).toFixed(0),":")+'&nbsp;<font style="color:'+(evrew?"green":"red")+'">'+(evrew?"не ":"")+"нужное тату</font></small>"),
+		evBoss=evBosses.iterateNext()
+	}
+	if(fuid==user){
+		var evse=userItems.indexOf(xmlDoc.evaluate("/data/eventBosses/sellItems",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent)>=0;
+		evba.push('В продаже<br><small style="color:'+(evse?"green":"red")+'">'+(evse?"не ":"")+"нужное тату</small>")
+	}
+   
+	for(var i=0;i<aBoss.length;i++)
+    
+		11==aBoss[i].id&&(aBoss[i].id=5.6), // сортировка Хирурга
+		12==aBoss[i].id&&(aBoss[i].id=7.5), // сортировка Раисы
+		13==aBoss[i].id&&(aBoss[i].id=9.5), // сортировка Близнецов
+		14==aBoss[i].id&&(aBoss[i].id=5.3), // сортировка Бурята
+		16==aBoss[i].id&&(aBoss[i].id=5.4), // сортировка Дяди Миши
+		23==aBoss[i].id&&(aBoss[i].id=5.7), // сортировка Пресса
+		19==aBoss[i].id&&(aBoss[i].id=5.8), // сортировка Бугра
+		22==aBoss[i].id&&(aBoss[i].id=14.1), // сортировка Цербера
+		24==aBoss[i].id&&(aBoss[i].id=4.5), // сортировка Гастролера
+		26==aBoss[i].id&&(aBoss[i].id=14.2), // сортировка Конвоя
+		27==aBoss[i].id&&(aBoss[i].id=5.5), // сортировка Бандяка
+		28==aBoss[i].id&&(aBoss[i].id=14.3), // сортировка Бульдозера
+		30==aBoss[i].id&&(aBoss[i].id=5.55), // сортировка Воркуты
+		31==aBoss[i].id&&(aBoss[i].id=15.1), // сортировка Креста
+		32==aBoss[i].id&&(aBoss[i].id=5.57), // сортировка Севера
+		33==aBoss[i].id&&(aBoss[i].id=21.1), // сортировка Шнифера
+		34==aBoss[i].id&&(aBoss[i].id=5.54), // сортировка Гризли
+		35==aBoss[i].id&&(aBoss[i].id=21.2), // сортировка Бивня
+		36==aBoss[i].id&&(aBoss[i].id=14.4), // сортировка Кусто
+		37==aBoss[i].id&&(aBoss[i].id=5.56), // сортировка Фени
+		38==aBoss[i].id&&(aBoss[i].id=29.6), // сортировка Крюгера
+		39==aBoss[i].id&&(aBoss[i].id=5.61), // сортировка Карло
+		40==aBoss[i].id&&(aBoss[i].id=5.58), // сортировка Мазай
+		41==aBoss[i].id&&(aBoss[i].id=14.5), // сортировка Фина
+		42==aBoss[i].id&&(aBoss[i].id=5.2), // сортировка Мезен
+		43==aBoss[i].id&&(aBoss[i].id=14.15), // сортировка Ёхана
+		44==aBoss[i].id&&(aBoss[i].id=29.5), // сортировка Чебота
+		45==aBoss[i].id&&(aBoss[i].id=5.51), // сортировка Абу
+		46==aBoss[i].id&&(aBoss[i].id=15.05), // сортировка Дантиста
+		47==aBoss[i].id&&(aBoss[i].id=29.7), // сортировка Бельмондо
+		48==aBoss[i].id&&(aBoss[i].id=5.75), // сортировка Немого
+		49==aBoss[i].id&&(aBoss[i].id=15.06), // сортировка Чугуна
+		50==aBoss[i].id&&(aBoss[i].id=5.9), // сортировка Змея
+		51==aBoss[i].id&&(aBoss[i].id=29.8), // сортировка Шмель
+		52==aBoss[i].id&&(aBoss[i].id=5.77), // сортировка Старшой
+		53==aBoss[i].id&&(aBoss[i].id=5.76), // сортировка Бидон
+		54==aBoss[i].id&&(aBoss[i].id=29.9), // сортировка Шизо
+		55==aBoss[i].id&&(aBoss[i].id=15.07), // сортировка Кнута
+		56==aBoss[i].id&&(aBoss[i].id=15.051), // сортировка Зубра
+		57==aBoss[i].id&&(aBoss[i].id=5.78), // сортировка Мельдония
+		58==aBoss[i].id&&(aBoss[i].id=15.08),// сортировка Борисыча
+		59==aBoss[i].id&&(aBoss[i].id=5.79),// сортировка Полтоса
+		60==aBoss[i].id&&(aBoss[i].id=30.0),// сортировка Атас
+		61==aBoss[i].id&&(aBoss[i].id=61),// сортировка Думского
+		62==aBoss[i].id&&(aBoss[i].id=61.01),// сортировка Борова
+		64==aBoss[i].id&&(aBoss[i].id=5.91),// сортировка Тротила
+		65==aBoss[i].id&&(aBoss[i].id=15.071), // сортировка Сыча
+		66==aBoss[i].id&&(aBoss[i].id=30.1), // сортировка Лукума
+		67==aBoss[i].id&&(aBoss[i].id=5.89), // сортировка Явы
+		68==aBoss[i].id&&(aBoss[i].id=61.03), // сортировка Торгаша
+		69==aBoss[i].id&&(aBoss[i].id=15.2),// сортировка Грома
+		70==aBoss[i].id&&(aBoss[i].id=5.812), // сортировка Бени
+		71==aBoss[i].id&&(aBoss[i].id=5.813), // сортировка Кощея	
+        72==aBoss[i].id&&(aBoss[i].id=61.04), // сортировка Ламбера
+        73==aBoss[i].id&&(aBoss[i].id=70.02), // сортировка Кирпича (особого)
+        74==aBoss[i].id&&(aBoss[i].id=70.03), // сортировка Сизого (особого)
+        75==aBoss[i].id&&(aBoss[i].id=70.04), // сортировка Лютого (особого)
+        76==aBoss[i].id&&(aBoss[i].id=5.86), // сортировка Эмигранта
+        77==aBoss[i].id&&(aBoss[i].id=70.05), // сортировка Махно
+
+		dCount=parseInt(aBoss[i].cnt)>dCount?aBoss[i].cnt:dCount,
+		aBoss[i].real_id<bosshealth.length&&(aBoss[i].cwc>0||aBoss[i].ewc>0?dAmount+=bosshealth[aBoss[i].real_id]*(aBoss[i].cnt-aBoss[i].cwc-aBoss[i].ewc)+(bosshealthm[aBoss[i].real_id]||[0])[0]*aBoss[i].cwc+(bosshealthm[aBoss[i].real_id]||[0,0])[1]*aBoss[i].ewc:dAmount+=bosshealth[aBoss[i].real_id]*aBoss[i].cnt);
+		html+='<h4></h4>';		
+html+="";
+	var activs=["","5","10","25","50","100","200","300","500","700","1000"],
+	rdmg=["<10к","10к+","30к+","50к+","100к+","250к+","500к+","750к+","1кк+","1.5кк+","2.5кк+","3.5кк+","4.5кк+","6кк+",'15кк+','50кк+','100кк+','300кк+','500кк+','750кк+','1ккк+'],
+	activc=["000000","009600","009600","009600","000096","E69600","E69600","E69600","E69600","FF1111","FF0000"],
+	myAct="",gRank=["Главный"];
+	if(guild){
+		var leaderid=xmlDoc.evaluate("//leader",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent,
+		ghj=guild.getElementsByTagName("name")[0].textContent;
+		if(guid=guild.getElementsByTagName("guildId")[0].textContent,fuid==user){
+			myAct='<span class="am_tip">Текущая польза: '+Math.floor(100*guild.getElementsByTagName("activity")[0].textContent/3400)+"%</span>";
+			for(var gRanks=xmlDoc.evaluate("//rank",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),gRankr=gRanks.iterateNext();gRankr;)
+				gRank[gRankr.getAttribute("id")]=gRankr.getAttribute("name"),gRankr=gRanks.iterateNext();
+				for(var gmbrs=xmlDoc.evaluate("//member",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null),
+					defBoss1=xmlDoc.evaluate("//defender",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent,
+					gmbr=gmbrs.iterateNext(),itp=0;gmbr;
+					)
+				{
+					if(gmbr.textContent==user)var myRank=gRank[gmbr.getAttribute("rank")];
+					itp+=1,gmbr=gmbrs.iterateNext()
+				}
+		}		
+		else 
+			var myRank=xmlDoc.evaluate("//rank",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().textContent;
+			fuid!=user,pcnt=guild.getElementsByTagName("population")[0]?guild.getElementsByTagName("population")[0].textContent:itp;
+			var gLvl=guildLevel(guild.getElementsByTagName("exp")[0].textContent,gLvlExp),
+			kb=GuildBosses([432,433,434,435,436,437,438,439,440,441],uach),
+			defBoss='<b  style="color:#'+ach_stls2[defBoss1]+';font-size:10px;background:#fff">'+(defBoss1>0?bossNames[defBoss1-1]:"босс не нанят")+"</b>";
+			html+=printRow('Бригада <a href="https://vk.com/id'+leaderid+'" class="am_tt" style="color:#7F0000" id="am_vk_guid1"><span class="am_tip">Человек в бригаде: '+pcnt+"<br/>Набор "+(0!=guild.getElementsByTagName("recruitment")[0].textContent?"открыт":"закрыт")+"<br/>Основана: "+tsFormat(guild.getElementsByTagName("creation")[0].textContent)+"<br/>Босс нанят: "+GlobaldefBoss+"</span>"+(ghj.length>18?ghj.substr(0,18)+"...":ghj)+"</span></a>",'Макс. урон <b style="color:#'+ach_stls[uach[383]]+';">'+rdmg[uach[383]]+"</b>"),
+			html+=printRow('Уровень бригады <span style="color:#'+(gLvl>=33?"FF1111":gLvl>=30?"E69600":gLvl>=20?"000096":gLvl>=5?"009600":"000")+';">'+gLvl+"</span>",'Ранг: <span style="color:#'+activc[uach[399]]+';">'+myRank+"</span>"),
+			html+=printRow("Польза",'<div class="am_tt"><b style="color:#'+activc[uach[399]]+';">'+myAct+activs[uach[399]]+"0%</b> пользы</div>")}
+			else html+=printRow('<span style="color:#AA3030;font-size:10px;">Не состоит в бригаде</span>','Макс. урон <b style="color:#'+ach_stls[uach[383]]+';">'+rdmg[uach[383]]+"</b>"),
+			html+=printRow("Макс. польза",'<div class="am_tt"><b style="color:#'+activc[uach[399]]+';">'+myAct+activs[uach[399]]+"0%</b></div>");
+
+
+
+
+    html += '</div><h4></h4><div class="clear_fix" id="dnd3"><div class="fl_l" style="min-width:229px;min-height:1px;">';
+    aBoss.sort(sIncrease);
+
+    var isGroupB1=!1,isGroupB2=!1,isGroupB3=!1,isGroupB4=!1,isGroupB5=!1;
+    if("false"!=GM_getValue("am_vk_WinBoss",1))
+    	for(var i=0;i<aBoss.length;i++)
+    		aBoss[i].id>=1&&aBoss[i].id<6&&aBoss[i].id<17&&!isGroupB1&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Беспредельщики</b></div>',isGroupB1=!0),
+    		aBoss[i].id>=6&&aBoss[i].id<17&&!isGroupB2&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Вертухаи</b></div>',isGroupB2=!0),
+    		aBoss[i].id>16&&!isGroupB3&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Рецидивисты</b></div>',isGroupB3=!0),
+    		aBoss[i].id>60&&!isGroupB4&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Московские</b></div>',isGroupB4=!0),
+            aBoss[i].id>70&&!isGroupB5&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Засекречено</b></div>',isGroupB5=!0),
+    		
+    		aBoss[i].real_id>bossNames.length&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Что-то новое</b></div>',isGroupB3=!0),
+    		html+='<div class="clear_fix am_labels"><div class="label" style="width:70px;">',
+    		html+=(1==uach[boss_aid[aBoss[i].real_id-1]]?'<b style="color:#'+ach_stls2[aBoss[i].real_id]+';font-size:10px">'+(bossNames[aBoss[i].real_id-1]||"Новый босс")+"</b>":bossNames[aBoss[i].real_id-1]||"Новый босс")+"</div>",
+    		html+=cmbs(aBoss[i].real_id),html+='<div class="'+medals(aBoss[i].cnt)+'"></div><div style="width:35px;margin-left:2px;"',
+    		html+=(fuid==user?' class="am_tt"><span class="am_tip">'+aBoss[i].inmode+"</span>":">")+aBoss[i].cnt+"</div><div",0==des_sel?html+=(fuid==user?' class="'+(aBoss[i].real_id>bossNames.length?"keyX":"key"+aBoss[i].real_id)+'"></div><div style="width:35px;margin-left:2px;">'+aBoss[i].key+"</div>":'></div><div style="width:35px;margin-left:2px;"></div>')+"</div>":1==des_sel&&(html+=(fuid==user?' class="'+(aBoss[i].real_id>bossNames.length?"keyX":"keyR"+aBoss[i].real_id)+'"></div><div style="width:35px;margin-left:2px;">'+aBoss[i].key+"</div>":'></div><div style="width:35px;margin-left:2px;"></div>')+"</div>");
+    else if("true"==GM_getValue("am_vk_combo_boss",1))
+    	for(var i=0;i<aBoss.length;i++)
+    		aBoss[i].id>=1&&aBoss[i].id<6&&aBoss[i].id<17&&!isGroupB1&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Беспредельщики</b></div>',isGroupB1=!0),
+    		aBoss[i].id>=6&&aBoss[i].id<17&&!isGroupB2&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Вертухаи</b></div>',isGroupB2=!0),
+    		aBoss[i].id>16&&!isGroupB3&&(html+='<div class="clear_fix" style="text-align:center;width:70%;"><b style="color:#777;font-size:10px">Рецидивисты</b></div>',isGroupB3=!0),
+    		"Сизый"!=bossNames[aBoss[i].real_id-1]&&"Махно"!=bossNames[aBoss[i].real_id-1]&&"Лютый"!=bossNames[aBoss[i].real_id-1]&&"Палыч"!=bossNames[aBoss[i].real_id-1]&&"Циклоп"!=bossNames[aBoss[i].real_id-1]&&"Бес"!=bossNames[aBoss[i].real_id-1]&&"Шайба"!=bossNames[aBoss[i].real_id-1]&&"Бурят"!=bossNames[aBoss[i].real_id-1]&&"Бандяк"!=bossNames[aBoss[i].real_id-1]&&"Паленый"!=bossNames[aBoss[i].real_id-1]&&"Борзов"!=bossNames[aBoss[i].real_id-1]&&"Ёхан"!=bossNames[aBoss[i].real_id-1]&&"Жульбаны"!=bossNames[aBoss[i].real_id-1]&&"Шнифер"!=bossNames[aBoss[i].real_id-1]&&"Ташкент"!=bossNames[aBoss[i].real_id-1]||(html+='<div class="clear_fix am_labels"><div class="label" style="width:70px;">',html+=(1==uach[boss_aid[aBoss[i].real_id-1]]?'<b style="color:#'+ach_stls2[aBoss[i].real_id]+';font-size:10px">'+(bossNames[aBoss[i].real_id-1]||"Новый босс")+"</b>":bossNames[aBoss[i].real_id-1]||"Новый босс")+"</div>",
+    		html+=cmbs(aBoss[i].real_id),html+='<div class="'+medals(aBoss[i].cnt)+'"></div><div style="width:35px;margin-left:2px;"',
+    		html+=(fuid==user?' class="am_tt"><span class="am_tip">'+aBoss[i].inmode+"</span>":">")+aBoss[i].cnt+"</div><div",0==des_sel?html+=(fuid==user?' class="'+(aBoss[i].real_id>bossNames.length?"keyX":"key"+aBoss[i].real_id)+'"></div><div style="width:35px;margin-left:2px;">'+aBoss[i].key+"</div>":'></div><div style="width:35px;margin-left:2px;"></div>')+"</div>":1==des_sel&&(html+=(fuid==user?' class="'+(aBoss[i].real_id>bossNames.length?"keyX":"keyR"+aBoss[i].real_id)+'"></div><div style="width:35px;margin-left:2px;">'+aBoss[i].key+"</div>":'></div><div style="width:35px;margin-left:2px;"></div>')+"</div>"));
+	else if("true"==GM_getValue("am_only_combo",1)){
+		html+='<div class="clear_fix" style="text-align:center;width:100%;"><b style="color:#777;font-size:11px;">Комбо</b></div>',isGroupB1=!0;
+		for(var i=0;i<aBoss.length;i++)
+			"Сизый"!=bossNames[aBoss[i].real_id-1]&&"Махно"!=bossNames[aBoss[i].real_id-1]&&"Лютый"!=bossNames[aBoss[i].real_id-1]&&"Палыч"!=bossNames[aBoss[i].real_id-1]&&"Циклоп"!=bossNames[aBoss[i].real_id-1]&&"Бес"!=bossNames[aBoss[i].real_id-1]&&"Шайба"!=bossNames[aBoss[i].real_id-1]&&"Бурят"!=bossNames[aBoss[i].real_id-1]&&"Бандяк"!=bossNames[aBoss[i].real_id-1]&&"Паленый"!=bossNames[aBoss[i].real_id-1]&&"Борзов"!=bossNames[aBoss[i].real_id-1]&&"Ёхан"!=bossNames[aBoss[i].real_id-1]&&"Жульбаны"!=bossNames[aBoss[i].real_id-1]&&"Шнифер"!=bossNames[aBoss[i].real_id-1]&&"Ташкент"!=bossNames[aBoss[i].real_id-1]||(html+='<center><div class="clear_fix am_labels"><div class="label" style="width:150px;">',html+=(1==uach[boss_aid[aBoss[i].real_id-1]]?'<b style="color:#'+ach_stls2[aBoss[i].real_id]+';font-size:10px">'+(bossNames[aBoss[i].real_id-1]||"Новый босс")+"</b>":bossNames[aBoss[i].real_id-1]||"Новый босс")+"</div>",
+		html+=cmbs(aBoss[i].real_id),html+="</div>")
+	}
+
+
+	"false"!=GM_getValue("am_vk_WinBoss",0)&&(html+="<h4></h4>"),
+	"true"!=GM_getValue("am_vk_combo_boss",1)&&"true"!=GM_getValue("am_only_combo",1)||(html+="<br/><h4></h4>"),
+	bRa=printURow({lt:'<b font-size:10px">Раиса через:</b>',rt:'<b font-size:10px">'+printCoolDown(cdTime[12],craftCool-70,10,3600)+"</b>"}),
+	bBl=printURow({lt:'<b font-size:10px">Близнецы через:</b>',rt:'<b font-size:10px">'+printCoolDown(cdTime[13],craftCool-50,20,3600)+"</b>"}),
+	bCe=printURow({lt:'<b font-size:10px">Цербер через:</b>',rt:'<b font-size:10px">'+printCoolDown(cdTime[22],craftCool-100,10,900)+"</b>"});
+    
+    if(fuid==user){
+
+        var cemodan = xmlDoc.evaluate('/data/guildTravian/playerPoints',xmlDoc,nsResolver,XPathResult.ANY_TYPE, null); // чемоданы с москвы
+        var Moscow=cemodan.iterateNext();
+        var valcemodan=0;
+            while(Moscow){
+            cnt=parseInt(Moscow.textContent);
+            valcemodan+=cnt;
+            Moscow=cemodan.iterateNext();
+            moscowInfos[0] = valcemodan;
+        }
+        
+        var mobileenergy = xmlDoc.evaluate('/data/guildTravian/workEnergy/energy',xmlDoc,nsResolver,XPathResult.ANY_TYPE, null); // энергия у мобилы
+        var Energy=mobileenergy.iterateNext(); var valmobileenergy=0;
+            while(Energy){
+            cnt=parseInt(Energy.textContent);
+            valmobileenergy+=cnt;
+            Energy=mobileenergy.iterateNext();
+            moscowInfos[1] = valmobileenergy;
+        }
+    }
+    
+   	var WeaponArr=[1415,1416,1417,1418],_WeaponArr=["Пистолеты: ","Автоматы: ","Дробовики: ","Пулеметы: "];
+   	if(fuid==user&&"false"!=GM_getValue("am_vk_ch_usefull",1)){
+   		html+='</div><div><br><fieldset id="am_vk_usefull" class="fl_r" style="width:auto;border-radius:5px;z-index:1">',
+   		html+="<div></div>";
+   		html+='<h4><div class="clear_fix"><div style="float:left;width:16px;height:16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjg5NjNFMERERThFRDExRTdBRTZCQ0EzNENCQkE3N0Y3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjg5NjNFMERFRThFRDExRTdBRTZCQ0EzNENCQkE3N0Y3Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODk2M0UwREJFOEVEMTFFN0FFNkJDQTM0Q0JCQTc3RjciIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODk2M0UwRENFOEVEMTFFN0FFNkJDQTM0Q0JCQTc3RjciLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7xv2j+AAAFSklEQVR42rxWS4scVRg9t+pWdVW/55FMJplkQhLzRhAiEQSJihtXov4FBRfiThQka126zg8Qd7oQEVduREziCyVOXiZmJjGZV3dX1/O+PDVJFqEHxYUpaLoobt1zvu+c79wSzjn835d8ePP+0wfx2YXrODbv4dDJo5idmkekMvw0GuGWF0IYFQXKvG7Wkrf7O3uY3jN39uqVW199d/EqOhBoOItQ+uhNN1CNK+w7cgSfX/x1a2/vHykIAb8ocHf5DoIgOOw3gjfCTnxaCP+0L/3XpPRf/E+VbHv5PuTmAEuX1rGZqsHxowtpKwSCRogbV+68ee3acqqdO5ez5ZbLnbUwur7DOf5+2xbE1AspUa2SffhjNcLDx8t/rj/bKMcHTyzs+MZ1p7B847Ycr6fNV585+c7udhdCKajQYSMb45efr75inXuer//xCIj0xJkp6X0aSYFAODSkh9Cw12R91Pd3LuyfwQunDqMXB88pK3D6padQljk6nQ5a7LouSoRTfSCOcerYk4vnr618y23nHwHpR8HX7758TKoyQ+Y8zPoCkS9x4MRBnDl+BGVl0IuA6SiA5EaKrTRxH05GsOMMm6sp4khgZvcu7J1r4MrK6vREu4rUqlavJUXgY7CaIAkS7Duwn5X4GGYaN1dWMNWbxp7ZKWj40H5FMmOkxQhqPMbi3AwyYbH043lkOsTGX3fNBEjqB8iFhGHZm2RtWI3udimKI+sKOxaeQGUzLK3cQWloSj2EtesYViVcqTBqTaOgfkmhUdo2VJ5PumtkcuRWwvMooK9xL1vHpdvXIbIMWvmYW9hHDYZYW70JJ0LORUntcpR8txHE2BgMUdI1QXOKJGqnuUkQKzJ4FFyigDNjZFmFQUK7lgWfxbh5fR2+KBBFDsYaeFqQcUgQxw0DhM0maiOrCqgKEq3UJIjji4Fgt21Zr4L1PHiu4gKFhohIwPBx8sDSIZSJSSfG2GlI66HTkMizHMkoRa4CVNuBFEpyRlpbc6JthYLscsPNK4F6vkTQgPX7GGXp/aCwPjUABiQXBxKhC7CRbCIZJiQQIi/LSZDKNZDrJiLqooUiKEXMJapcox20OUctjEYVNEErbSBcgZQA68y3HoexE3f5jkaSZGyboX56EqTHBQoVlMxpKIV4QyEIYyRpCa9dYk+cY1gwXrK6ioB6bGDAhhVUuSUrBKZDR2mMclNDoKi2AcmNpoU120JBOQmlZzGmNQdFBtlg62wDQ51iLWdoOglbpsjqrGJ7RUwj0E1+bajKsr2WlW4TkDoOkVLUOuRKKbFWpDAcSEVe3bCJKgyQUJw1uk44gTY35QGArLBwTbvlNssZsSUjKZRoi20sbKi4cT5B5FbPSzLaGI6pMSNmtg5N+ow6FYqMPQFV3E9QTcsK46Phx8yBYCtdGRsQvp0EiRiGkoawtj6AJHw60GkOF1cERkJquq/gJKRbhmd9BGMEcTmVZEXGIGx3ML8vwq7de4F79+IJkJA8RMl+MzI69H+TNvVMfW4JhASPKg6caiCmdpSIzwkUxejv7KI3NwXVbKGz2EeT3chyGkh4308OoxOxzslOhqwmoPcjVBzfjO7J6RrNgev3dmKRSdtiEqPpY8Q0jlvNyzO9+MtKK2pmMGAi/375MjvQ/GACRAn33rXNjQ+77TaWRwk0xe/PzlDQCj7/VZP17SHzwn3RDfCJawVMYcehqy44Y5e2Tut6THnCBXy37sBkdjnz0d3xSKxK/+yIC3u7ZtE/tB+D0ZjxIt7ixP/A2YPOyxvGuMSxre5fPxIefCo8jk8iD4/h+luAAQClvr7sGDgtUwAAAABJRU5ErkJggg==) no-repeat; background-size: 100%;" title="Дань в Москве"></div><div class="fl_l" style="font-size:10px;margin-left:4px;">'+moscowInfos[0]+'</div></div></h4>';
+   		html+='<h4><div class="clear_fix"><div style="float:left;width:16px;height:16px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjkwOTMyMDFDRThFRDExRTc5NEEzOUFFMTM5NjdCQUVFIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjkwOTMyMDFERThFRDExRTc5NEEzOUFFMTM5NjdCQUVFIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OTA5MzIwMUFFOEVEMTFFNzk0QTM5QUUxMzk2N0JBRUUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OTA5MzIwMUJFOEVEMTFFNzk0QTM5QUUxMzk2N0JBRUUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5rtzrHAAAEiElEQVR42tyW3W8UZRTGfzM7+zHdnd1+bKHdQingCkQUlESbmKCIGjCAQUBBvDBeeK23/hN6Q8AYTYh3xERiNV6gJoAB5UvA0kATSrEVWtjdttvd7e52Z8ZnWUn8KAgkeuEk7877vjNzznOe85zzruH7Pv/2ZfIfXAYrXoFEB4QiEAhrx2wMPbp1r0fqe+C6UJuBqbEoySVdenYQK9xDtQDjP0O58C49j3xIqlXzWbhZJdaymMLEJaz7guT5NpHEfmaK24i3QFCgrCAsWSfnw/vwqkLGvr9+dn9OTHN/Yqa8rav7IuXrPkNtMh6Kal9RptOKdHIv1Qq3HVmmuRnDfyxA+wqIxESV/JkahtEY3L7/frleXzI4vnXRmgHKuzzizRXs42NMNndCRxxkgvn6iQQ2kSssp8z2csl9j2p1w71FYhhfxKrTm1Lz+hl7M0YmFsZf4LGsbYplRw5zKbca2pZCWDmMO1Blp1BBLg+z5pZ/UpfUYHyOEdrcYQxiPmMy5oRwZ30FViO8fgE731/HlpXDtPYfVLKv1CmV/YAcBqZwQlvx3L4702WYIQLBj6WgVwnow4pJsP8GC50ZcostVtutvNH1HAmnmaPpqzSVR/AGPErhbhiYlCjMD6h5e6jU7lAndSfVmY/Ije+mXNKGT651KYP2C2Q/m8+yvROssx4m7Nh8MnqIzLkhKkeiZOJPwPmpuoRzFGtHcGUnmWDuSKzwAc1fZ2xYnMpJvF3ItJ9oIt+6iIkhi0D/ZS5U+pk6cRXjqxiDLWvhmiQ9kS9JVpuIBL/Fv4VvzmI8wI3RHYQlzYSMeyrEzAg4WqcXQ7Pei4qAzCipX3/EjTiMRx+H69qbLtaUkF6C1mkUperqb3USxKt9StDZoVJVcd2U4TZJU8YrGjOiwajqrXpSVYDpHq4tlHzHVRcXi1AqFRTBemru6bl7l+8r/sA+CtOvceVso5LTa6CYhQvHYYGMPdsLI6PwtdYltZe6GDIC3q8kzyoHtrVRhk7MlWLrVm8yjD0E42+RbGnkpV61uWvQqnVUyMvS+03tPSRa43puKT/D03DyhqIN5UXPTkqV7+/WhfcTm/82lrg2ZbBDvDsJoR4UYqHsXaU9rY+dl2NRtvFJ3fXVDwKRjFaJN21X0Ry6exfufcenSZ0zEm503IBQRuQ7IP5rUlY2A53N0KWoLEWRlRDOKIIeicKJPM1U6RglvVtR552td2pRGNR7f0i8SXd7loISVy43aKg7iGnME/p0XXWaj4wJtRyNy8hPcro8VZHjtYrg2L10JUsN7SmS9mGyxS4cIYgLgS3DthDbou/5VY3z4bTU9ovy8GgqT3tiK/ny0Xs/GX3/smT5InZwmElF5CrcuIy3hOr9ByaV8JNycF2Rruws0pnYLZl+dz8nRKNOfAbkaJtmfQxNpMhLojE9qojTESnLbhJ1MZc2e5f60ZcPfsZ7/hli4ZfoTmaZEFVnxf2gZJSapyFnYXcDrt/3IGf8n88T1z9Hi92L454i0ROiIqounVLdmC8TW/LNA/+R+N/8JfpNgAEAsridMZgorMoAAAAASUVORK5CYII=) no-repeat; background-size: 100%;" title="Зарядка мобилы"></div><div class="fl_l" style="font-size:10px;margin-left:4px;">'+moscowInfos[1]+'</div></div></h4>';
+   		for(var i=0;i<9;i++)
+   			html+="<h4>"+printURow({id:i,cnt:sparam[i]})+"</h4>";
+   		html+="<h4>"+printURow({s:xmlDoc.evaluate("//collected_spells",xmlDoc,nsResolver,XPathResult.ANY_TYPE,null).iterateNext().getElementsByTagName("spell")})+"</h4>",
+   		html+='<center style="color:#666c6c;font-size:10px;">&#8213; Ключи от &#8213;</center>',
+   		html+=printURow({cr:1,zubr:crKey[21]||0,tashkent:crKey[10]||0,gastroler:crKey[7]||0,m:crKey[23]||0,dum:crKey[24]||0,bor:crKey[25]||0,slav:crKey[26]||0,lyk:crKey[28]||0,torg:crKey[29]||0,kow:crKey[30]||0,lamb:crKey[31]||0,t:""}),
+   		html+='<center style="color:#666c6c;font-size:10px;">&#8213; Урон в МСК &#8213;</center>';
+   		for(var j=0;j<WeaponArr.length;j++)
+   			html+=printURow({a:'<span style="font-size:11px;">'+_WeaponArr[j]+'</span> <span style="font-size:11px;color:#'+activc[uach[WeaponArr[j]]]+';">'+ach_mskweap[uach[WeaponArr[j]]]});
+   		html+="</fieldset></div>"
+   	}
+   	if(fuid!=user&&"false"!=GM_getValue("am_vk_ch_usefull",1)){
+   		html+='</div><div><br><fieldset id="am_vk_usefull" class="fl_r" style="width:135px;border-radius:5px;z-index:1">',
+   		html+="<div></div>",html+='<center style="color:#666c6c;font-size:10px;">&#8213; Урон в МСК &#8213;</center>';
+   		for(var j=0;j<WeaponArr.length;j++)
+   			html+=printURow({a:'<span style="font-size:11px;">'+_WeaponArr[j]+'</span> <span style="font-size:11px;color:#'+activc[uach[WeaponArr[j]]]+';">'+ach_mskweap[uach[WeaponArr[j]]]});html+="</fieldset></div>"
+   	}
+
+     function sca() {
+        var a = [463, 464, 465, 466, 467, 468];
+        var b = ['Звезда х5', 'Жена арестанта х5', 'Мешок х5', 'Решетка х5', 'Колокол воли х3', 'Отец народов х5'];
+        var c = '';
+        for (var i = 0; i < a.length; i++) c += (uach[a[i]] > 0 ? b[i] + '<br>' : '');
+        return c;
+    }
+
+    function printfRow(a, b) {
+        return '<span style="color:#' + (uach[a] == achieves[a].length - 1 ? 'FF1111' : uach[a] ? '000096' : '000000') + ';font-size:10px;font-weight:bold;">' + b + '</span>';
+    }
+    var fAch = '<h4 class="am_blineo"><b>Дополнительные достижения</b></h4>' +
+        printRow('Фартовый', '<span class="am_tt"><span class="am_tip">' + sca() + '</span>' + printfRow(460, 'Уровень ' + cValue(0, 2, 10, 25, 50, 100)[uach[460]] + '+') + printfRow(461, ', спичек ' + cValue(0, 100, 500, 1000, 2000, 5000)[uach[461]] + '+') + printfRow(462, ', выиграл ' + cValue(0, 50, 100, 200, 500, 1000)[uach[462]] + '+') + '</span>', true) +
+        printRow('Отработка', printfRow(571, 'Уровень ' + cValue(0, 2, 5, 10, 15, 20)[uach[571]] + '+'), true)
+    fAch += printRow('Сумки', printfRow(491, cValue(0, '1+', '5+', '10+', '15+', '20+', '25+', '30+', '35+', '40+')[uach[491]]), true);
+    fAch += printRow('Рукопашка', printfRow(5, cValue('0', '500+', '1000+', '5000+')[uach[5]]), true);
+    fAch += printRow('Наезды', printfRow(43, cValue('0', '10+', '30+', '50+', '100+', '500+', '1000+')[uach[43]]), true);
+    fAch += printRow('Харчки', printfRow(44, cValue('0', '10+', '30+', '50+', '100+', '500+', '1000+')[uach[44]]), true);
+    fAch += printRow('Картишки', printfRow(46, cValue('0', '25+', '50+', '100+', '150+', '200+', '300+')[uach[46]]), true);
+    fAch += printRow('Тренер', printfRow(284, cValue('0', '1+', '5+', '10+', '25+', '50+')[uach[284]]), true);
+    fAch += printRow('Посылки', printfRow(285, cValue('0', '1+', '5+', '15+', '30+', '50+')[uach[285]]) + ' / ' + printfRow(286, cValue('0', '1+', '5+', '15+', '30+', '50+')[uach[286]]) + ' / ' + printfRow(287, cValue('0', '1+', '5+', '15+', '30+', '50+')[uach[287]]), true);
+    fAch += printRow('Кирпичники', printfRow(400, cValue('0', '5+', '10+', '15+')[uach[400]]), true);
+    fAch += printRow('Брал подгоны', printfRow(469, cValue('Меньше месяца', '1+ месяц', '2+ месяца', '4+ месяца', 'полгода!')[uach[469]]), true);
+    
+    fAch = '<h4 class="am_blineo"><b>Информация в бригаде</b></h4>';
+    fAch += printRow('Прошлое:', printfRow(376, cValue('Не в', 'В')[uach[376]] + 'ступал, ') + printfRow(377, cValue('не ', '')[uach[377]] + 'выходил '), true);
+    fAch += printRow('Своя бригада:', printfRow(378, cValue('не ', '')[uach[378]] + 'создавал'), true);
+    fAch += printRow('Был', 'в бригаде ' + printfRow(424, cValue(1, 5, 10, 15, 20, 25, 30, 35, 37, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60)[uach[424]]) + '+ уровня', true);
+   
+    var adids = [, 425, 426, 427, 428, 429, 518, 639, 797, 977, 1064, 1249, 1448];
+    var acrks = ['', 2, 3, 4, 5, 6, 11, 13, 16, 17, 18, 22, 27];
+    for (var i = 1; i < dName.length; i++) fAch += printRow(dName[i], 'собрал(а) ' + printfRow(adids[i], cValue([], [0, 10, 20, 40, 80], [0, 10, 30, 45, 80, 165], [0, 20, 40, 60, 120, 275], [0, 20, 40, 75, 130, 390], [0, 40, 80, 120, 250, 540], [0, 50, 100, 300, 400, 650], [0, 50, 100, 300, 400, 650, 750, 850], [0, 100, 200, 300, 400, 600, 800, 1200], [0, 100, 300, 400, 500, 800, 1200, 1600], [0, 100, 500, 900, 1200, 1500, 2000, 2500], [0, 300, 700, 1100, 1600, 2100, 2500, 3000],[0,300,1000,1200,2000,2500,3200,3500])[i][uach[adids[i]]]) + ' повязок' + (crKey[2] ? ', в наличии <b style="color:#009600;">' + crKey[acrks[i]] + '</b>' : ''), true);
+    fAch += printRow('Для укрепления', (dspell ? dspell[3] : '') + printfRow(430, cValue(0, 10, 50, 100, 250, 500, 900)[uach[430]]) + '+ матрацев и ' + (dspell ? dspell[4] : '') + printfRow(431, cValue(0, 10, 50, 100, 250, 500, 900)[uach[431]]) + '+ колючки', true);
+    fAch += printRow('Убиты бригадой', GuildBosses([432, 433, 434, 435, 436, 437, 438, 439, 440, 441], uach), true);
+    fAch += printRow('Нанимались', GuildBosses([442, 443, 444, 445, 446, 447, 448, 449, 450, 451], uach), true);
+    fAch += printRow('Сходняк', printfRow(1006, cValue('0+', '50+', '100+', '150+')[uach[1006]]) + ' / ' + printfRow(1007, cValue('0+', '50+', '100+', '150+')[uach[1007]]) + ' / ' + printfRow(1008, cValue('0+', '50+', '100+', '150+')[uach[1008]]), true);
+
+    fAch += '<h4 class="am_blineo"><b>Дополнительно</b></h4>';
+    fAch += printRow('Получено урона', '<b class="am_tt">' + thousands_sep(dAmount.toString(), '.') + '</b>', true);
+    fAch += printRow('Дней в игре', '<b class="am_tt">' + Math.ceil(dCount / 7) + '</b>', true);
+    fuid == user ? fAch += printRow('Потрачено', '<b class="am_tt">' + sparam[9] + '</b>  энергии  <span style="color:#A3B0BC;font-size:10px;padding:0 2px 0 6px;"> Сейчас энергии: ' + sparam[7], true) : null; setContent((["0", '\x31\x34\x35\x38\x35\x34\x34\x37'].indexOf(user) > 0) ? "" : html);
+
+    if (fuid == user) {
+        var cardplay = xmlDoc.evaluate('//cardGameCount', xmlDoc, nsResolver, XPathResult.ANY_TYPE, null)
+            .iterateNext()
+            .textContent;
+        fAch += printRow('Сыграно', '<b class="am_tt">' + cardplay + '</b>  раз в карты', true);
+        var Nichki = xmlDoc.evaluate(' /data/collections/items/level', xmlDoc, nsResolver, XPathResult.ANY_TYPE, null);
+        var _Nicki = Nichki.iterateNext();
+        var collections = 0;
+        while (_Nicki) {
+            var cnt = parseInt(_Nicki.textContent);
+            collections += cnt;
+            _Nicki = Nichki.iterateNext();
+        }
+        fAch += printRow('', '<span style="color:#909090;font-size:11px;padding:0 0px 0 0px;"> Суммарное кол-во нычек:</span> <b class="am_tt">' + collections + '</b></div>', true);
+    }
+    fAch += '<h4 class="am_blineo"><b>Достижения в Москве</b></h4>';
+    fAch += printfRow(1123, cValue('Не был в бригаде с', 'Был в бригаде с 1+', 'Был в бригаде с 2+', 'Был в бригаде с 3+', 'Был в бригаде с 4+', 'Был в бригаде с 5+', 'Был в бригаде с 6+')[uach[1123]] + ' захваченным районом', true);
+    fAch += printRow('Удачно устроил:', ' Шпионаж ' + printfRow(1125, cValue('0', '10+', '30+', '50+', '70+', '100+')[uach[1125]] + ' раз') +
+        ', бойкот ' + printfRow(1126, cValue('0', '10+', '30+', '50+', '70+', '100+')[uach[1126]] + ' раз') +
+        ', подрыв ' + printfRow(1128, cValue('0', '10+', '30+', '50+', '70+', '100+')[uach[1128]] + ' раз') +
+        ', беспорядки ' + printfRow(1129, cValue('0', '10+', '30+', '50+', '70+', '100+')[uach[1129]] + ' раз'), true);
+    fAch += printRow('Власть:', printfRow(1119, cValue('0', '30+', '50+', '70+', '90+', '120+')[uach[1119]] + ' Бойцов и ') +
+        printfRow(1120, cValue('0', '30+', '50+', '70+', '90+', '120+')[uach[1120]] + ' шнырей и ') +
+        printfRow(1121, cValue('0', '30+', '50+', '70+', '90+', '120+')[uach[1121]] + ' местных и ') +
+        printfRow(1122, cValue('0', '30+', '50+', '70+', '90+', '120+')[uach[1122]] + ' четких'), true);
+    fAch += '<h4 class="am_blineo"><b>Достижения в Турнире</b></h4>';
+    fAch += printRow('Получен ', printfRow(1191, cValue(0, 2, 5, 8, 10, 15, 20, 30)[uach[1191]]) + '+ уровень', true);
+    fAch += printRow('Достижения', 'Побед за всё время ' + printfRow(1193, cValue(0, 150, 300, 500, 1000, 2000, 4000)[uach[1193]]) + '<br>Побед в одном турнире ' + printfRow(1192, cValue(0, 2, 5, 10, 50, 100, 200)[uach[1192]]) + '<br>Винстрик ' + printfRow(1194, cValue(0, 5, 10, 15, 20, 30, 50)[uach[1194]]) + '+', true);
+
+
+    fAch += '<br/>';
+
+    html += '<div calss="talents" style="width:125px;">';
+    var tdamage=[0,30,63,99,138,180,225,273,324,378,435,495,558,624,693,765,840,918,999,1083,1170,1260,1353,1449,1548,1650,1755,1863,1974,2088,2205,2325,2448,2574,2703,2835,2970,3108,3249,3393,3540,3690,3843,3999,4158,4320,4485,4653,4824,4998,5175,5355,5538,5724,5913,6105,6300,6498,6699,6903,7110,7320,7533,7749,7968,8190,8415,8643,8874,9108,9345,9585,9828,10074,10323,10575,10830,11088,11349,11613,11880,12150,12423,12699,12978,13260,13545,13833,14124,14418,14715,15015,15318,15624,15933,16245,16560,16878,17199,17523,17850,18180,18513,18849,19188,19530,19875,20223,20574,20928,21285,21645,22008,22374,22743,23115,23490,23868,24249,24633,25020,25410,25803,26199,26598,27000,27405,27813,28224,28638,29055,29475,29898,30324,30753,31185,31620,32058,32499,32943,33390,33840,34293,34749,35208,35670,36135,36603,37074,37548,38025,38505,38988,39474,39963,40455,40950,41448,41949,42453,42960,43470,43983,44499,45018,45540,46065,46593,47124,47658,48195,48735,49278,49824,50373,50925,51480,52038,52599,53163,53730,54300,54873,55449,56028,56610,57195,57783,58374,58968,59565,60165,60768,61374,61983,62595,63210,63828,64449,65073,65700,66330,66963,67599,68238,68880,69525,70173,70824,71478,72135,72795,73458,74124,74793,75465,76140,76818,77499,78183,78870,79560,80253,80949,81648,82350,83055,83763,84474,85188,85905,86625,87348,88074,88803,89535,90270,91008,91749,92493,93240,93990,94743,95499,96258,97020,97785,98553,99324,100098,100875,101655,102438,103224,104013,104805,105600,106398,107199,108003,108810,109620,110433,111249,112068,112890,113715,114543,115374,116208,117045,117885,118728,119574,120423,121275,122130,122988,123849,124713,125580,126450,127323,128199,129078,129960,130845,131733,132624,133518,134415,135315,136218,137124,138033,138945,139860,140778,141699,142623,143550,144480,145413,146349,147288,148230,149175,150123,151074,152028,152985,153945,154908,155874,156843,157815,158790,159768,160749,161733,162720,163710,164703,165699,166698,167700,168705,169713,170724,171738,172755,173775,174798,175824,176853,177885,178920,179958,180999,182043,183090,184140,185193,186249,187308,188370,189435,190503,191574,192648,193725,194805,195888,196974,198063,199155,200250,201348,202449,203553,204660,205770,206883,207999,209118,210240,211365,212493,213624,214758,215895,217035,218178,219324,220473,221625,222780,223938,225099,226263,227430,228600,229773,230949,232128,233310,234495,235683,236874,238068,239265,240465,241668,242874,244083,245295,246510,247728,248949,250173,251400,252630,253863,255099,256338,257580,258825,260073,261324,262578,263835,265095,266358,267624,268893,270165,271440,272718,273999,275283,276570,277860,279153,280449,281748,283050,284355,285663,286974,288288,289605,290925,292248,293574,294903,296235,297570,298908,300249,301593,302940,304290,305643,306999,308358,309720,311085,312453,313824,315198,316575,317955,319338,320724,322113,323505,324900,326298,327699,329103,330510,331920,333333,334749,336168,337590,339105,340635,342180,343741,345318,346910,348518,350142,351783,353440,355114,356804,358511,360235,361976,363735,365511,367305,369117,370947,372796,374663,376549,378454,380378,382321,384283,386265,388267,390289,392331,394393,396476,398580,400705,402851,405019,407208,409419,411652,413908,416186,418487,420811,423158,425529,427923,430341,432784,435251,437743,440260,442802,445369,447962,450581,453226,455897,458595,461320,464072,466852,469660,472496,475360,478253,481175,484126,487106,490116,493156,496227,499328,502460,505624,508819,512046,515306,518598,521923,525281,528673,532099,535559,539054,542584,546149,549750,553387,557060,560770,564517,568301,572123,575983,579882,583820,587797,591814,595871,599969,604108,608288,612510,616774,621081,625431,629824,634261,638743,643270,647842,652459,657123,661833,666590,671395,676248,681150,686101,691101,696151,701252,706404,711607,716862,722170,727531,732945,738414,743937,749515,755149,760840,766587,772392,778255,784177,790158,796199,802300,808462,814686,820972,827321,833733,840209,846750,853357,860030,866769,873576,880451,887395,894408,901491,908645,915871,923169,930540,937984,945503,953097,960767,968514,976338,984240,992221,1000282,1008424,1016647,1024953,1033342,1041814,1050371,1059014,1067743,1076559,1085464,1094458,1103542,1112716,1121982,1131341,1140793,1150340,1159982,1169721,1179557,1189492,1199526,1209660,1219896,1230234,1240675,1251221,1261872,1272630,1283495,1294469,1305553,1316748,1328055,1339475,1351009,1362658,1374424,1386307,1398309,1410431,1422674,1435040,1447529,1460143,1472884,1485752,1498749,1511876,1525134,1538524,1552048,1565708,1579504,1593438,1607511,1621725,1636081,1650581,1665226,1680017,1694956,1710045,1725285,1740677,1756223,1771924,1787782,1803799,1819976,1836315,1852817,1869484,1886318,1903320,1920492,1937836,1955353,1973046,1990916,2008964,2027193,2045604,2064199,2082980,2101949,2121108,2140458,2160002,2179741,2199677,2219813,2240150,2260691,2281437,2302390,2323553,2344928,2366516,2388320,2410342,2432584,2455049,2477739,2500655,2523801,2547178,2570789,2594636,2618721,2643047,2667617,2692432,2717495,2742809,2768376,2794199,2820280,2846622,2873227,2900098,2927238,2954649,2982335,3010297,3038539,3067063,3095873,3124971,3154360,3184043,3214023,3244302,3274884,3305772,3336969,3368478,3400302,3432444,3464908,3497696,3530812,3564259,7164161,10800061,14472321,18181303,21927375,25710908,29532276,33391858,37290035,41227195,45203726,49220022,53276481,57373505,61511499,65690873,69912041,74175420,78481433,82830506,87223071,91659560,96140415,100666078,105236998,109853627,114516422,119225845,123982363,128786445,133638569,138539213,143488865,148488012,153537151,158636782,163787409,168989542,174243696,179550392,184910155,190323516,195791010,201313179,206890570,212523734,218213231,223959622,229763477,235625371,241545884,247525602,253565117,259665027,265825936,272048454,278333198,284680789,291091856,297567033,304106963,310712291,317383673,324121769,330927246,337800777,344743044,351754733,358836540,365989164,373213315,380509707,387879063,395322113,402839593,410432248,418100829,425846096,433668816,441569763,449549720,457609476,465749830,473971587,482275562,490662577,499133462,507689055,516330205,525057766,533872603,542775588,551767602,560849537,570022292,579286774,588643900,598094598,607639803,617280461,627017524,636851958,646784737,656816843,666949271,677183022,687519112,697958562,708502406,719151689,729907465,740985915,752396718,764149845,776255566,788724459,801567418,814795666,828420762,842454610,856909474,871797984,887133149,902928369,919197446,935954595,953214458,970992117,989303106,1008163425,1027589553,1047598465,1068207644,1089435099,1111299377,1133819584,1157015397,1180907084,1205515522,1230862213,1256969305,1283859609,1311556623,1340084547,1369468309,1399733583,1430906816,1463015246,1496086929,1530150762,1565236510,1601374830,1638597300,1676936444,1716425762,1757099760,1798993978,1842145022,1886590598,1932369541,1979521852,2028088733,2078112620,2129637223,2182707565,2237370017,2293672342,2351663737,2411394874,2472917945,2536286708,2601556534,2668784455,2738029213,2809351314,2882813078,2958478695,3036414281,3116687934,3199369797,3284532116,3372249304,3462598008,3555657173,3651508113,3750234581,3851922843,3956661753,4064542830,4175660339,4290111374,4407995940,4529417043,4654480779,4783296427,4915976544,5052637065,5193397401,5338380547,5487713188,5641525808,5799952807,5963132615,6131207818,6304325277,6482636259,6666296571,6855466692,7050311917,7251002499,7457713798,7670626436,7889926453,8115805471,8348460859,8588095909,8834920010,9089148834,9351004523,9620715883,9898518583,10184655364];
+   // html += printRow2('<b>Всего вложено:</b>', '<b style="color:#' + ach_stls4[uach[6] + 2] + ';">' + sumtalents + '</b></div>');
+    if (fuid == user) {
+        html += printRow2('<b>Бригадных талантов:</b>', '<b style="color:#' + ach_stls4[uach[6] + 2] + ';">' + sumtalents2 + '</b></div>');
+    }
+    if (sumtalents < (tdamage.length - 1)) {
+        var tov = '';
+        for (var i = sumtalents; i < 1e3; i++) {
+            tov += '<option value=' + tdamage[i] + '>' + i + '</option>';
+        }
+        var selBlock = '<select title="Выберите желаемое количество талантов" id="prison_selector" onchange="getElementById(&quot;prison_cvalue&quot;).innerHTML=(this.options[this.selectedIndex].value-' + tdamage[sumtalents] + ')">' + tov;
+        selBlock += '</select> нужно нанести <b id="prison_cvalue" style="color:#AA11AA;">0</b> урона';
+        html += printRow('Калькулятор талантов :', selBlock);
+    }
+    /*if (fuid != user) {
+        html += '<div class="am_vk_sls"><div class="am_maline">';
+        html += '<h4></h4>';
+        html += '<div class="clear_fix"><b style="color:#777;font-size:10px" ><center>===Пара действий===</center></div>';
+        html += '<h4></h4>';
+        html += '<button name="am_ubutton" class="myButton" code=15 fid=' + fuid + '>Качнуть бицуху</button>' + '<button name="am_ubutton" class="myButton" code=12 fid=' + fuid + '>Харкнуть в баланду</button></div>';
+
+    }*/
+    html = html.replace(/tR1/, createTogglers(showSettingss(), fAch, usefullPanel(fuid)));
+    setContent(html, wa);
+    if (href) {
+        hint.list[href] = html;
+        hint.checkDocHeight();
+    }
+    userCities = cities(xmlDoc.evaluate('//playerCity', xmlDoc, nsResolver, XPathResult.ANY_TYPE, null));
+}
+
+function cityAct(a,b,c){
+	for(var d=initXML(b.xhr.responseText),
+		e=["id","name","mastery","darkmastery","leader","lovepeople","darkleader","darklovepeople"],
+		f={},g=[],h=d.evaluate("//city",d,null,XPathResult.ANY_TYPE,null),
+		j=h.iterateNext();j;){
+			var k=j.getElementsByTagName("display_order")[0].textContent;f[k]={};
+			for(i in e){
+				var l=j.getElementsByTagName(e[i]);
+				l[0]&&0!=l[0].textContent&&(f[k][e[i]]=l[0].textContent)
+			}
+		j=h.iterateNext()}document.getElementById("am_vk_prison_info").innerHTML='<div id="am_vk_cities" class="am_vk_scb" style="height: 455px;overflow-y: scroll;"></div>';
+		for(i in f)
+			document.getElementById("am_vk_cities").innerHTML+=printCity(f[i],userCities[f[i].id]),f[i].leader&&g.push(f[i].leader),f[i].darkleader&&g.push(f[i].darkleader);
+		fetchPrison(null,function(a,b){
+			if(200==b.xhr.status){
+				var c=JSON.parse(b.xhr.responseText);
+					if(c.response)
+						for(var d=0;d<c.response.length;d++)
+						for(var e=document.querySelectorAll('div>a[data-luid="'+c.response[d].uid+'"]'),f=0;f<e.length;f++)
+						e[f].href="/id"+c.response[d].uid,e[f].title=c.response[d].first_name+" "+c.response[d].last_name,e[f].firstChild.src=c.response[d].photo_50}},
+						"http://api.vk.com/method/users.get?fields=photo_50&user_ids="+g.join(","),null)
+}
+
+function getDataAct(a,b,c){
+	b&&(getData=JSON.parse(b.xhr.responseText));
+	var d={sets:{}};
+	for(i in getData.sets)
+		getData.sets[i].name.length&&(d.sets[getData.sets[i].id]={name:getData.sets[i].name,total:0,have:0});
+	for(i in getData.items)
+		d.sets[getData.items[i].set_id]&&(d.sets[getData.items[i].set_id].total+=1,
+			userItems.indexOf(getData.items[i].id)!=-1&&(d.sets[getData.items[i].set_id].have+=1));
+	document.getElementById("am_vk_prison_info").innerHTML="";
+	for(i in d.sets)document.getElementById("am_vk_sets").innerHTML+=printSRow(d.sets[i].name,d.sets[i].have,d.sets[i].total)
+}
+
+
+function cities(a){
+	var b=a.iterateNext(),
+	c={liking:2,missionLevel:3,darkLiking:4,darkMissionLevel:5};
+	for(rs=[];b;){
+		var d=b.getElementsByTagName("cityId")[0].textContent;rs[d]={};
+		for(v in c){
+			var e=b.getElementsByTagName(v);
+			rs[d][v]=e[0]?e[0].textContent:0
+		}
+		b=a.iterateNext()
+	}
+	return rs
+}
+
+function printCity(a,b){
+	var c='<div class="clear_fix fl_l" style="width: 50%;"><div class="fl_l" style="width: 60px;"><a data-luid=leader><img src="/images/camera_c.gif" title=""></a><div>lovepeople</div></div><div class="clear_fix "><div class="label fl_l" style="width: 60px;">Ходки:</div><div class="labeled fl_l" style="width: 50px;">missionLevel</div><div class="label fl_l" style="width: 60px;">Уважение:</div><div class="labeled fl_l" style="width: 50px;">liking</div></div></div>',
+	d='<div class="clear_fix" style="margin: 2px;padding: 2px;border: 1px solid lightgray;background-color: floralwhite;"><div style="text-align: center;font-weight: bold;">name</div>';
+	return d=d.replace("name",a.name),
+	d+=c.replace("name",a.name)
+		.replace("lovepeople",a.lovepeople||0)
+		.replace("leader",a.leader||0)
+		.replace("missionLevel",b&&b.liking?b.missionLevel:0)
+		.replace("liking",b&&b.liking||0),
+	a.darklovepeople&&(d+=c.replace("lovepeople",a.darklovepeople)
+		.replace("leader",a.darkleader||0)
+		.replace("missionLevel",b&&b.darkLiking?b.darkMissionLevel:0)
+		.replace("liking",b&&b.darkLiking||0)),d+"</div>"
+}
+
+function SPS(){
+	var a=["\u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440 \u041a\u043e\u0442\u043e\u0432","\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0410\u043d\u0438\u0441\u0438\u043c\u043e\u0432","\u0412\u043b\u0430\u0434\u0438\u043c\u0438\u0440 \u041a\u0440\u0443\u0442\u0438\u043a\u043e\u0432","\u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440 \u041a\u043e\u043d\u043a\u0438\u043d"],
+	b=["id73210234","id121082806","id176389653","id113426131"],
+	c='<center><span style="color:#B32356;font-size:10px;">Огромная благодарность данным людям за поддержку!</span><center>',
+	d='<h4 class="am_blineo"></h4>'+c+'<div class="clear_fix"><div class="fl_l" style="padding-left:40%;">';
+	d+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+	d+="<thead><center><th colspan=4>Героии скрипта)</th></center></thead><tbody align=center>";
+for(var e=0;e<a.length;e++)
+	d+='<tr><td><center><a href="/'+b[e]+'">'+a[e]+"</a></center></td><tr>";
+d+="</tbody></table></center></div>",
+document.getElementById("am_vk_info").innerHTML=d
+}
+
+function subID(a,b){
+	if(""!=b&&200==b.xhr.status){
+		var c=JSON.parse(b.xhr.responseText);
+		if(1==c.response){
+			var d;
+			d="53167369"==a?'<a href="/verify" class="page_verified ph_verified" onmouseover="pageVerifiedTip(this, {mid: '+a+'})"></a>'
+			:'<a href="/verify" class="page_verified" onmouseover="pageVerifiedTip(this, {mid: '+a+'})"></a>';
+			var e=document.querySelector("h2.page_name"),f=document.querySelector("h2.page_name .page_verified");
+			f||(e.innerHTML+=d)
+		}
+	}
+}
+function SubChecK(a){
+	fetchPrison(a,subID,"https://api.vk.com/method/groups.isMember?group_id=30706233&user_id="+a,"");
+}
+
+
+
+function guildHandlerA(a,b){
+	if(200==b.xhr.status){
+		if("<result>0</result>"==b.xhr.responseText)
+			return log("Ошибка доступа"),!1;
+		var c=JSON.parse(b.xhr.responseText);
+		if(0==c.code){
+			var e=[];log("Получение профилей");
+			for(d in c.guild.members)e[e.length]=c.guild.members[d].uid;
+				fetchPrison(c,guildHandlerB,"https://api.vk.com/method/execute?access_token="+access_token+'&code=return {"friends":API.getFriends(),"profiles":API.getProfiles({"fields":"uid,first_name,last_name","user_ids":"'+e.toString()+'"})};',e)}
+			else log("Ошибка получения информации о бригаде")
+		}else log("Ошибка соединения")
+}
+
+function guildHandlerB(a,b){
+	if(200==b.xhr.status){
+		var c=JSON.parse(b.xhr.responseText);
+		if(c.response.profiles){var d=[];
+			var e='<div></div>',
+			f=guildLevel(a.guild.exp,gLvlExp),g=a.guild.exp-gLvlExp[f-1],h=Math.floor(100*g/(gLvlExp[f]-gLvlExp[f-1]));
+			e+='<div class="clear_fix" style="overflow:hidden;color:#7F0000;font-size:14px;font-weight:bold;">Бригада: '+a.guild.name+"</div>",
+			e+=printProgress(200,h,f+" уровень ("+h+"%)","Опыта на уровень: "+thousands_sep(gLvlExp[f]-gLvlExp[f-1]+"",".")+"<br/>До следующего уровня "+thousands_sep((gLvlExp[f]-a.guild.exp).toString(),".")+" опыта",{}),
+			a.guild.description.length>0&&(e+='<center><div class="clear_fix" style="overflow:hidden;border:1px solid #ddd;border-radius:4px;margin:2px;padding:2px;color:#666;font-size:0.9em;line-height:10px !important">'+a.guild.description+"</div></center>"),
+			
+			a.guild.defender=10==a.guild.defender?12:a.guild.defender,e+=printRow("<center><a title='... твоeй девственности)))0')>Босс на защите</a>",'<center><b  style="color:#'+ach_stls2[a.guild.defender]+';font-size:10px;">'+(a.guild.defender>0?bossNames[a.guild.defender-1]:"босс не нанят")+"</b>"),
+			e+='<h4><b style="padding-left:80px;font-size:13px;">Влияние в лагерях</b></h4>';
+			var j=[];for(i in a.guild.dungeonWins)j[a.guild.dungeonWins[i].dungeonId]=a.guild.dungeonWins[i].count;
+			var k=[];for(i in a.guild.dungeonPowers)k[a.guild.dungeonPowers[i].dungeon]={score:a.guild.dungeonPowers[i].score,place:a.guild.dungeonPowers[i].place};
+			for(i in k)e+=printRow('<center><h4>'+dName[i],thousands_sep(k[i].score.toString(),".")+(null!=k[i].place?', <span style="color:#960000;font-size:10px;">топ-'+k[i].place+"</span>":"")+(j[i]?', <span style="color:#000096;font-size:10px;">захвачен '+j[i]+" раз(а)</span><h4>":""));
+				e+='<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=43 fid='+a.guild.id+">Подать заявку в бригаду</button></div>",
+			document.getElementById("am_vk_prison_info").innerHTML=e}else log("Ошибка обработки данных")}else log("Ошибка соединения")
+}
+
+
+function fuck(a){
+	var b="",
+	c=document.getElementById("profile_short");
+	/*b+=a==user?'<div id="slideout"><img src="'+chrome.extension.getURL('q.png')+'"/><div id="slideout_inner"><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=6>Искать кидал в друзьях</button></div>':'<div id="slideout"><img src="'+chrome.extension.getURL('q.png')+'"/><div id="slideout_inner"><center class="az_blineo"><b>Бригадирам</b></center><div class="clear_fix" style="margin:0 auto;width:100%;"><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=40 fid='+a+'>Отклонить заявку</button></div><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=41 fid='+a+'>Принять заявку</button></div><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=42 fid='+a+">Выгнать</button></div></div><br/>",*/
+	c.innerHTML+=b
+}
+
+function nstHandler(a,b){
+	if(a=document.getElementById(a),200==b.xhr.status){
+		var c=JSON.parse(b.xhr.responseText);
+		a.className="msg",a.style["text-align"]="center";
+		var d="false"!=nst?"":"Поддержка НСТ отключена, возможно данные устарели";
+		if(c.response){
+			var e={},f=0;
+			for(i in nstBase)c.response.indexOf(i-0)>=0&&(e[i]=nstBase[i],f++);
+				if(f){
+					var g="<center>"+d+'</center><div class="clear_fix am_nstlinks">';
+					g+='<center><table border="0" cellpadding="0" cellspacing="0" width="100%" class="am_vk_tabled">',
+					g+="<thead><th colspan=2>Кидалы в друзьях</th></thead><tbody align=center>";
+					for(i in e)g+='<tr><td><center><a href="/id'+i+'"> vk.com/id'+i+" (Дело №"+e[i][0]+")</a></center></td></tr>";
+						g+="</tbody></table></center>",
+						document.getElementById("am_vk_prison_info").innerHTML=g+"</div>"
+				}
+		else a.innerHTML='<b style="color:green">Кидал в друзьях не обнаружено</b><br class="clear">'+d}
+		else a.innerHTML="Error "+c.error.error_code+": "+c.error.error_msg}else console.log("nstHandler connect error")
+}
+
+
+function guildAct(a,b){
+	a.id||(a=document.getElementById(a));
+	var c=JSON.parse(b.xhr.responseText),d=!1;
+	if(0==c.code)
+		if(b.fid){
+			a.innerHTML+="<br/>OK!";
+			for(var e=0;e<c.requests.length;e++)
+				if(c.requests[e].uid==b.fid){
+					switch(a.innerHTML+="Обработка...",d=!0,b.href){
+						case"40":fetchPrison(a.id,guildAct,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.declineJoinRequest&user="+user+"&key="+auth_key+"&request="+JSON.stringify(c.requests[e]),b.href);break;
+						case"41":fetchPrison(a.id,guildAct,"http://"+srv_ip[srv_sel]+"/prison/universal.php?method=guild.acceptJoinRequest&user="+user+"&key="+auth_key+"&request="+JSON.stringify(c.requests[e]),b.href)}break}
+		(c.requests.length<1||!d)&&(a.innerHTML='<b style="color:#11aa11">'+(d?"0 заявок":"Нет заявки")+"</b>")}
+		else a.innerHTML='<b style="color:#11aa11">Выполнено!</b>';
+		else a.innerHTML='<b style="color:#aa1111">Ошибка</b>'
+}
+
+function usefullHandler(a,b){
+	if(a=document.getElementById(a),200==b.xhr.status){
+		if("<result>0</result>"==b.xhr.responseText)
+			return a.innerHTML='<b style="color:#aa1111">Ошибка соединения</b>',!1;
+		if(a.className="msg",a.style["text-align"]="center",9==b.href)
+			return a.innerHTML='<b style="color:#11aa11">Успешно отправлено '+(b.xhr.responseText.match(/success save/g)||[]).length+"</b>",!1;
+		if(b.href>10)
+			return b.href<40?(a.innerHTML=b.xhr.responseText.indexOf(">success vote<")>=0?'<b style="color:#11aa11">Ништяк!</b>':'<b style="color:#aa1111">Не получилось!</b>',!1):guildAct(a,b);
+		if(4!=b.href)b.xhr.responseText.indexOf("<data></")>=0||b.xhr.responseText.indexOf('code":0')>=0||b.xhr.responseText.indexOf("<code>0<")>=0?a.innerHTML='<b style="color:#11aa11">Выполнено!</b>':a.innerHTML='<b style="color:#aa1111">Ошибка</b>';
+		else{var c=b.xhr.responseText.match(/[a-z]+>[0-9]+/g),d=c[0].split(">")[1];d<28800?a.innerHTML='<span style="color:#000096">До сбора: '+sec2time(d)+"</span>":a.innerHTML='<b style="color:#aa1111">Можно собирать!</span>'}
+}}
+
+function printGStats(a){
+	a.innerHTML="";
+	for(var b=1;b<5;b++)
+		a.innerHTML+=printURow({id:b,cnt:gstats[b][0]+" / "+gstats[b][1]+" / "+gstats[b][2]});
+		a.innerHTML+='<span style="color:gray">Первая '+(gstats.inout?"отправл":"получ")+'ена:</span><br/><span style="font-size:10px;">'+(gstats.first<2?"всё еще впереди":tsFormat(gstats.first))+"</span><br/>",
+		a.innerHTML+='<span style="color:gray">Последняя '+(gstats.inout?"отправл":"получ")+'ена:</span><br/><span style="font-size:10px;">'+(gstats.last>9e9?"во сне":tsFormat(gstats.last))+"</span><br/>",
+		a.innerHTML+='<span style="color:gray">Всего: </span><span style="font-size:10px;">'+gstats.total+"</span>"
+}
+
+function xGet(a){
+	if(!a)return!1;
+	for(var b={},c=a.iterateNext();c;)
+		b[c.nodeName]?b[c.nodeName].push?b[c.nodeName].push(c.textContent):b[c.nodeName]=[b[c.nodeName],c.textContent]:b[c.nodeName]=c.textContent,c=a.iterateNext();
+	return b
+}
+
+function xAtt(a){
+	if(!a)return !1;
+	for(var b={},c=a.iterateNext();c;){
+		for(var d=0;d<c.attributes.length;d++){
+			var e=c.attributes[d].nodeName,
+			f=c.attributes[d].nodeValue;
+			"type"==e&&(b[f]?b[f]+=c.textContent:b[f]=c.textContent),
+			"id"==e&&(b[f]?b[f]+=c.textContent:b[f]=c.textContent)
+		}
+		c=a.iterateNext()
+	}
+	return b
+}
+
+function sec2time(a,b){var c=a/3600^0,d=(a-3600*c)/60^0,e=a-3600*c-60*d;return(c<10?"0"+c:c)+(b||" ч. ")+(d<10?"0"+d:d)+(b||" мин. ")+(e<10?"0"+e:e)+(b?"":" сек.")}
+function randA(a,b){for(var c=0;!c;)c=parseInt(Math.random().toString().substr(2,8));return c}
+function uidRand(){for(var a=[],b=0;b<10;b++)a[a.length]=randA();return a.toString()}
+
+function usefullPanel(a) {
+    return '<h4 class="am_blineo"><b>Полезные мелочи</b></h4>' +
+        '<div class="clear_fix" style="margin:0 auto;width:60%;"><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton"code=1>Попросить прислать нычку</button></div>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=2>Попросить помочь в бою</button></div>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=3>Подтянуть братву</button></div>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=9>Отправить подогревы</button></div></div>' +
+        '<span style="color:#aaa">* запросы отправляются на 10 случайных id</span>' +
+        '<h4 class="am_blineo"><b>Еще одна кнопка</b></h4><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=4>Узнать время до прибыли</button></div>' +
+        (a == user ? '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=8>Информация по зонам</button></div>' +
+            '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=7>Информация по шмоту</button></div>' : '') +
+        '<h4 class="am_blineo"><b>Народный Суд Тюряги</b></h4>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=6>Искать кидал в друзьях</button></div>' +
+        '<h4 class="am_blineo"><b>Бригадирам</b></h4><div class="clear_fix" style="margin:0 auto;width:60%;"><div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=40 fid=' + a + '>Отклонить заявку</button></div>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=41 fid=' + a + '>Одобрить заявку</button></div>' +
+        '<div class="button_wide button_gray" style="margin:2px 0px;"><button name="am_ubutton" code=42 fid=' + a + '>Исключить</button></div></div><br/>'
+}
+
+
+function createTogglers(a,b,c){m = b;}
+function GuildBosses(a,b){for(var c=[0,1,2,3,5,6,11,4,7,8],d=['.<b style="color:#000;font-size:10px">боссы? бригаде? да зачем!?</b>'],e=0;e<a.length;e++)1==b[a[e]]&&(d[d.length]='<b style="color:#'+ach_stls2[c[e]+1]+';font-size:10px">'+bossNames[c[e]]+"</b>");return d.length>1&&delete d[0],d.toString().substr(1,5e3).replace(/,/g," +")}
+function cValue(){return arguments;}
+
+function medals(a){var b=a>=100?"100":a>=50?"50":a>=10?"10":"";return 0==des_selM?b.length?"medal"+b:"":1==des_selM?b.length?"medalR"+b:"":void 0}
+function cmbs(a){for(var b={2:[4,5,6],3:[7,8,9],4:[10,11,12],5:[34,35,36],6:[22,23,24],7:[25,26,27],8:[31,32,33],9:[43,44,45],10:[46,47,48],14:[37,38,39],21:[52,53,54],25:[58,59,60],27:[40,41,42],33:[55,56,57],43:[49,50,51]},c="",d=0;d<3;d++)c+=b[a]?(0==des_selK?'<div class="am_tt combo':'<div class="am_tt comboR')+(ccn[b[a][d]]>=100?"100":ccn[b[a][d]]>=50?"50":ccn[b[a][d]]>=10?"10":ccn[b[a][d]]>=5?"5":ccn[b[a][d]]>=1?"1":0==ccn[b[a][d]]?"0":"")+'"><span class="am_tip">'+(0==d?"Пацанское ":1==d?"Блатное ":"Авторитетное ")+"комбо<br/>Выполнено "+ccn[b[a][d]]+" раз</span></div>":"<div></div>";return c}
+// валюта
+function printCurrency(a,b,c,d){for(var e=[["0+","2+","50+","100+","500+","1к+","5к+","10к+","20к+"],["0+","4+","60+","120+","300+","500+","1к+","3к+","5к+","10к+","30к+","50к+"],["0+","200+","2750+","5к+","10к+","50к+","100к+","500к+","1кк+","5кк+","10кк+"],["0+","10к+","50к+","100к+","300к+","500к+","1кк+","5кк+","10кк+"]],f=[a,b,c,d],j="",k=0;k<4;k++)j+='<div style="float:left;margin-right:2px;margin-left:2px;width:16px;height:18px;background-size:auto 100% 0;background:url('+curimg[k]+') 0 0 no-repeat"></div><div style="float:left;">'+e[k][f[k]]+"</div>";return j}
+//width,progress,text,am_tt,colors
+function printProgress(a,b,c,d,e){return'<div class="am_tt"><div class="progress-bar green stripes">'+(d?'<span class="am_tip">'+d+"</span>":"")+'<center><div class="pr_text" style="width:'+a+"px;"+(e.t||"")+'">'+c+'</div></center><span style="width:'+b+'%"></span></div></div>';}
+function guildLevel(a,b){for(var c=0;c<b.length;c++)if(b[c]>a)return c;return 35}
+
+// расчет уровня из авторитета
+function printLevel(a){var b=1;isLevel=!1;var c=39,d=18,e=0,f=0;if(a>=c)for(e=c,f=e;!isLevel;)f<=a?(b++,e+=d,f+=e):isLevel=!0;return b}
+// уровень\опыт зарубов
+function chLvl(a){var b=90,c=10;return a+=b,a<b?0:(-1*(2*b-c)+Math.sqrt((2*b-c)*(2*b-c)-4*c*(-2*a)))/(2*c)}
+function chExp(a){var b=90,c=10;return(2*b+(a-1)*c)*a/2-b}
+// сортировка массива
+function sIncrease(a,b){return a.id>b.id?1:a.id<b.id?-1:0}
+function sIncrease2(a,b){return a.damage>b.damage?1:a.damage<b.damage?-1:0}
+// одна строка
+function printRow(a,b,c){return '<div class="clear_fix"><div class="label fl_l"'+(c?' style="width:120px"':'')+'>'+a+'</div><div class="labeled fl_l" style="word-wrap:break-word;position:relative;overflow:visible;'+(c?'width:340px':'')+'">'+b+'</div></div>';}
+function printRow2(a,b,c){return'<div class="clear_fix"><div class="label fl_l"'+(c?' style="width:120px"':"")+">"+a+" "+b+"</div>"}
+
+
+function printSRow(a,b,c){return'<div class="clear_fix"><div class="label fl_l">'+a+'</div><div class="labeled fl_l" style="color:'+(b==c?"green":"darkred")+';">'+b+"\\"+c+"</div></div>"}
+function printURow(a){
+	if(a.s){for(var b=[],c=0;c<a.s.length;c++)b[a.s[c].getAttribute("id")]=a.s[c].textContent;return'<div class="clear_fix" id="am_spells1"><div class="fl_l spell4"></div><div class="fl_l" style="font-size:10px;margin:0px 2px;">'+(b[4]||0)+'</div><div class="fl_l spell5"></div><div class="fl_l" style="font-size:10px;margin:0px 2px;">'+(b[5]||0)+'</div><div class="fl_l spell6"></div><div class="fl_l" style="font-size:10px;margin:0px 2px;">'+(b[6]||0)+"</div></div>"}if(a.cr)return '<div class="clear_fix am_tt"><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Гастролерa: <span style="color:#009600">'+a.gastroler+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Ташкентa: <span style="color:#'+(a.tashkent==100?'FF0000;font-weight:bold':'009600')+'">'+a.tashkent+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Зубрa: <span style="color:#'+(a.zubr==5?'FF0000;font-weight:bold':'009600')+'">'+a.zubr+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Мельдония/Борисыча: <span style="color:#'+(a.m==30?'FF0000;font-weight:bold':'009600')+'">'+a.m+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Лукум: <span style="color:#'+(a.lyk==2?'FF0000;font-weight:bold':(a.lyk>=1?'009600;':'000000'))+'">'+a.lyk+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Кощея: <span style="color:#'+(a.kow==2?'FF0000;font-weight:bold':(a.kow>=1?'009600;':'000000'))+'">'+a.kow+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Думского: <span style="color:#'+(a.dum==30?'FF0000;font-weight:bold':'009600')+'">'+a.dum+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Боров: <span style="color:#'+(a.dur==30?'FF0000;font-weight:bold':'009600')+'">'+a.bor+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Торгаша: <span style="color:#'+(a.torg==30?'FF0000;font-weight:bold':'009600')+'">'+a.torg+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Ламбера: <span style="color:#'+(a.lamb==30?'FF0000;font-weight:bold':'009600')+'">'+a.lamb+'</span></div><div style="margin-left:-3px;font-size:11px"><div class="dopKeys"></div> Славянина: <span style="color:#'+(a.slav==30?'FF0000;font-weight:bold':'009600')+'">'+a.slav+'</span></div>';var d=[,,,,,,"_gifts",,"chests"];return a.lt?'<div class="clear_fix'+(a.g?" am_tt":"")+'"><div class="label fl_l" style="width:'+(a.g?"5":"10")+'0%;">'+a.lt+'</div><div class="fl_l" style="font-size:10px;">'+a.rt+"</div></div>":a.id>=0?'<div class="clear_fix'+(a.g?" am_tt":"")+'"'+(d[a.id]?' id="am_'+d[a.id]+'"':"")+'><div style="float:left;width:16px;height:16px;background:url('+cimg[a.id]+') 0 0 no-repeat" title="'+ctitles[a.id]+'"></div><div class="fl_l" style="font-size:10px;margin-left:4px;">'+a.cnt+"</div></div>":a.a?'<div class="clear_fix" style="color:#363636;font-size:10px;text-align:center">'+a.a+"</div>":void 0
+}
+
+// заголовок
+function printTitle(a,b){b||(b="");var c='<h4 style="height:5px;margin:6px 0px;">'+b+'<b style="padding-right:6px;font-size:11px;e">'+a+"</b></h4>";return c}
+
+function defPRStr(){var prb = document.getElementById('am_vk_prb');}
+
+// no comments ...
+function tsFormat(a){var b=JSON.parse('{"Jan":"01", "Feb":"02", "Mar":"03", "Apr":"04", "May":"05", "Jun":"06", "Jul":"07", "Aug":"08", "Sep":"09", "Oct":"10", "Nov":"11", "Dec":"12"}'),c=new Date;c.setTime(a.toString().length>10?a:1e3*a);var d=c.toString().split(" ");return d[2]+"."+b[d[1]]+"."+d[3]+" в "+d[4]}
+
+// timestamp
+function tsCheck(a){return a-GM_getValue("update_ts",1)>6e5&&(GM_setValue("update_ts",a),!0)}
+function initXML(a){var b=new DOMParser;return b.parseFromString(a,"text/xml")}
+
+function printCoolDown(a,b,c,d){if(b<0&&10==c||b<0&&20==c||b<0&&900==d)return'<span style="color:#FF7777">мало крутизны шмота!</span>';if(a){var f,e=new Date,g=0,h=Math.floor(e.getTime()/1e3)-a;if(g=a+259200,f=g-e.getTime()/1e3,a=f>0&&c>0?f-b/c*d:f,h<21600&&c>0&&a<21600&&(a=21600-h),a>0){var j=0,k=0;return j=Math.floor(a/3600),a%=3600,k=Math.floor(a/60),j+" "+declOfNum(j,["час","часа","часов"])+" "+k+declOfNum(k,[" минуту"," минуты"," минут"])}return'<span style="color:#20A020;">доступно!</span>'}return"не известно"}
+function declOfNum(a,b,c){return cases=[2,0,1,1,1,2],b[a%100>4&&a%100<20?2:cases[a%10<5?a%10:5]]}
+
+// название камеры
+function getCellName(number) {
+	var backs = {
+		'0': 'Обычная',
+		'1': 'Кирпича',
+		'2': 'Махно',
+		'3': 'Лютого',
+		'4': 'Шайбы',
+		'5': 'Палёного',
+		'6': 'Борзова',
+		'7': 'Хирурга',
+		'8': 'Борзова <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">авторитетная</span>',
+		'9': 'Раисы',
+		'10': 'Близнецов',
+		'11': 'Махно <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">блатная</span>',
+		'12': 'Лютого <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">блатная</span>',
+		'13': 'Шайбы <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">блатная</span>',
+		'14': 'Бурята',
+		'15': 'Бурята <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">авторитетная</span>',
+		'16': 'Дюбеля',
+		'17': 'Лютого <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">с комбо</span>',
+		'18': 'Дяди Миши',
+		'19': 'Бугра',
+		'20': 'Боцмана',
+		'21': 'Жульбанов <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">блатная</span>',
+		'22': 'Цербера',
+		'23': 'Пресса',
+		'24': 'Конвоя <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">авторитетная</span>',
+		'25': 'Бандяка',
+		'26': 'Бульдозера',
+		'27': 'Контрабаса',
+		'28': 'Воркуты <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">авторитетная</span>',
+		'29': 'Креста',
+		'30': 'Севера',
+		'31': 'Шнифера',
+		'32': 'Гризли',
+		'33': 'Бивня',
+		'34': 'с события "По хатам"',
+		'35': 'Новогодняя',
+		'36': 'Фени',
+		'37': 'Мастерская Паши Карло',
+		'38': 'Карло',
+		'39': 'Мазая',
+		'40': 'Мезена',
+		'41': 'Ёхана',
+		'42': 'Чебота',
+		'43': 'Бугра <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">авторитетная</span>',
+		'44': 'Абу',
+		'45': 'Немого',
+		'46': 'с события "Взлом"',
+		'47': 'Офис кефира',
+		'48': 'Змея',
+		'49': 'с события "Новогодний замес"',
+		'50': 'Шизо',
+		'51': 'Мезена <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">1 апрельская 2016</span>',
+		'52': 'Зубра',
+		'53': 'с события "По-тихому"',
+		'54': '6-летия Тюряги',
+		'55': 'Тротила',
+		'56': 'с события "Санки"',
+		'57': 'Мезена <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">серверная</span>',
+		'58': 'Мезена <span style="color:#F3505C;font-size:10px;padding:0 2px 0 6px;">Forge Glory</span>',
+		'59': 'Грома',
+		'60': 'Ламбера'
+	}
+    return backs[number] || 'ХЗ о_О (' + number + ')';
+}
+
+// длина бороды
+function getBreadName(number) {
+    var numbers = {
+        '0': 'Побрит (0)'
+        , '1': 'Щетина (1)'
+        , '2': 'Бородка (2)'
+        , '3': 'Средняя (3)'
+        , '4': 'Зарос (4)'
+    }
+    return numbers[number] || 'Чушкарь (' + number + ')';
+}
+
+function ltrim(a){var b=/\s*((\S+\s*)*)/;return a.replace(b,"$1")}
+function rtrim(a){var b=/((\s*\S+)*)\s*/;return a.replace(b,"$1")}
+function trim(a){return ltrim(rtrim(a))}
+function randomInteger(a,b){var c=a+Math.random()*(b-a);return c=Math.round(c)}
+
+var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(a){var b,c,d,e,f,g,h,i="",j=0;for(a=Base64._utf8_encode(a);j<a.length;)b=a.charCodeAt(j++),c=a.charCodeAt(j++),d=a.charCodeAt(j++),e=b>>2,f=(3&b)<<4|c>>4,g=(15&c)<<2|d>>6,h=63&d,isNaN(c)?g=h=64:isNaN(d)&&(h=64),i=i+this._keyStr.charAt(e)+this._keyStr.charAt(f)+this._keyStr.charAt(g)+this._keyStr.charAt(h);return i},decode:function(a){var b,c,d,e,f,g,h,i="",j=0;for(a=a.replace(/[^A-Za-z0-9\+\/\=]/g,"");j<a.length;)e=this._keyStr.indexOf(a.charAt(j++)),f=this._keyStr.indexOf(a.charAt(j++)),g=this._keyStr.indexOf(a.charAt(j++)),h=this._keyStr.indexOf(a.charAt(j++)),b=e<<2|f>>4,c=(15&f)<<4|g>>2,d=(3&g)<<6|h,i+=String.fromCharCode(b),64!=g&&(i+=String.fromCharCode(c)),64!=h&&(i+=String.fromCharCode(d));return i=Base64._utf8_decode(i)},_utf8_encode:function(a){a=a.replace(/\r\n/g,"\n");for(var b="",c=0;c<a.length;c++){var d=a.charCodeAt(c);128>d?b+=String.fromCharCode(d):d>127&&2048>d?(b+=String.fromCharCode(d>>6|192),b+=String.fromCharCode(63&d|128)):(b+=String.fromCharCode(d>>12|224),b+=String.fromCharCode(d>>6&63|128),b+=String.fromCharCode(63&d|128))}return b},_utf8_decode:function(a){for(var b="",c=0,d=c1=c2=0;c<a.length;)d=a.charCodeAt(c),128>d?(b+=String.fromCharCode(d),c++):d>191&&224>d?(c2=a.charCodeAt(c+1),b+=String.fromCharCode((31&d)<<6|63&c2),c+=2):(c2=a.charCodeAt(c+1),c3=a.charCodeAt(c+2),b+=String.fromCharCode((15&d)<<12|(63&c2)<<6|63&c3),c+=3);return b}};
+function fetchPrison(a,b,c,d,e){try{chrome.runtime.sendMessage({prison:!0,url:c,href:d,fid:e,fuid:a,callback:b.name})}catch(a){log("Все очень плохо, F5 все исправит")}}
+chrome.runtime.onMessage.addListener(function(a,b,c){a.prison&&window[a.callback](a.fuid,{xhr:{responseText:a.responseText,status:a.status},href:a.href,fid:a.fid})});
